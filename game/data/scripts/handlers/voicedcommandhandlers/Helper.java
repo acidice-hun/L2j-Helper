@@ -20,6 +20,7 @@ package handlers.voicedcommandhandlers;
 import com.l2jserver.L2DatabaseFactory;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
+import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
 import com.l2jserver.gameserver.model.L2TradeList;
@@ -29,8 +30,10 @@ import com.l2jserver.gameserver.model.actor.stat.PcStat;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.zone.ZoneId;
+import com.l2jserver.gameserver.network.serverpackets.BuyList;
 import com.l2jserver.gameserver.network.serverpackets.CharInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
+import com.l2jserver.gameserver.network.serverpackets.ExBuySellList;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
@@ -41,6 +44,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -68,6 +72,8 @@ public class Helper implements IVoicedCommandHandler {
     private static HashMap<Integer, String[]> SkillDances  = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillSpecial = new HashMap<Integer, String[]>();
+
+	private final Map<Integer, L2TradeList> _lists = new FastMap<>();
 
     private static boolean L2Helper;
     private static boolean L2HelperIsCombat;
@@ -1026,13 +1032,6 @@ public class Helper implements IVoicedCommandHandler {
 
             }
         }
-
-    }
-
-
-    private void Shop() {
-
-        L2TradeList Buy = new L2TradeList();
 
     }
 
