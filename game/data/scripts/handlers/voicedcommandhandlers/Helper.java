@@ -597,7 +597,7 @@ public class Helper implements IVoicedCommandHandler {
     }
 
     /*
-     * Function
+     * Helper
      */
     private void setLevel(Integer lvl)
     {
@@ -776,6 +776,10 @@ public class Helper implements IVoicedCommandHandler {
             _log.log(Level.WARNING, "", e);
         }
     }
+
+    /*
+     * Newbie
+     */
     private void Nwb()
     {
         try
@@ -913,6 +917,10 @@ public class Helper implements IVoicedCommandHandler {
             _log.log(Level.WARNING, "", e);
         }
     }
+
+    /*
+     * Buffer
+     */
     private void Buff()
     {
         if(this.param != null)
