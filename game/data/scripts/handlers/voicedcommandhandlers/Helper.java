@@ -92,6 +92,13 @@ public class Helper implements IVoicedCommandHandler {
     private static String  L2HelperNewbieSetNameColor;
     private static String  L2HelperNewbieSetTitleColor;
 
+
+    @Override
+    public String[] getVoicedCommandList()
+    {
+        return _voicedCommands;
+    }
+
     @Override
     public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
     {
@@ -140,11 +147,6 @@ public class Helper implements IVoicedCommandHandler {
         return true;
     }
 
-    @Override
-    public String[] getVoicedCommandList()
-    {
-        return _voicedCommands;
-    }
 
     /*
      * Core
@@ -163,28 +165,28 @@ public class Helper implements IVoicedCommandHandler {
                 break;
 
             case "level":
-                this.setLevel(1);
                 this.getDefault();
+                this.setLevel(1);
                 break;
 
             case "delevel":
-                this.setLevel(0);
                 this.getDefault();
+                this.setLevel(0);
                 break;
 
             case "vitality":
-                this.setVitality();
                 this.getDefault();
+                this.setVitality();
                 break;
 
             case "rec":
-                this.setRec();
                 this.getDefault();
+                this.setRec();
                 break;
 
             case "ench":
-                this.setEnchant();
                 this.getDefault();
+                this.setEnchant();
                 break;
 
             case "buffer":
@@ -193,6 +195,7 @@ public class Helper implements IVoicedCommandHandler {
                 break;
 
             case "recharge":
+                this.getDefault();
                 this.BuffRecharge();
                 break;
 
