@@ -33,6 +33,7 @@ import com.l2jserver.gameserver.network.serverpackets.CharInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
+import com.l2jserver.gameserver.network.serverpackets.ShortCutInit;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
 import java.io.File;
@@ -73,6 +74,7 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean L2HelperIsCombat;
     private static boolean L2HelperIsPeace;
     private static boolean L2HelperIsCraft;
+    private static boolean L2HelperProhibited;
     private static Integer L2HelperServer;
     private static boolean L2HelperPrice;
     private static double  L2HelperPriceRate;
@@ -90,11 +92,14 @@ public class Helper implements IVoicedCommandHandler {
     private static String  L2HelperNewbieSetTitle;
     private static String  L2HelperNewbieSetNameColor;
     private static String  L2HelperNewbieSetTitleColor;
-    private static boolean L2HelperNewbieRelogin;
 
     @Override
     public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
     {
+        if(activeChar == null) {
+            return true;
+        }
+
         if(Properties == false)
         {
             getProperties();
@@ -102,9 +107,17 @@ public class Helper implements IVoicedCommandHandler {
 
         if (L2Helper == true && command.equals("helper"))
         {
+
             this.html       = null;
             this.view       = "view";
             this.activeChar = activeChar;
+
+            if(L2HelperProhibited == false)
+            {
+                this.activeChar.stopPunishTask(true);
+                this.activeChar.setPunishTimer(0);
+                this.activeChar.setPunishLevel(L2PcInstance.PunishLevel.NONE, 0);
+            }
 
             if(this.check() == false)
             {
@@ -335,6 +348,7 @@ public class Helper implements IVoicedCommandHandler {
             L2HelperIsCombat = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperIsCombat", "False"));
             L2HelperIsPeace = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperIsPeace", "False"));
             L2HelperIsCombat = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperIsCraft", "False"));
+            L2HelperProhibited = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperProhibited", "False"));
 
             L2HelperServer = Integer.parseInt(L2HelperProperties.getProperty("L2HelperServer", "0"));
             L2HelperPrice = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperPrice", "False"));
@@ -365,7 +379,6 @@ public class Helper implements IVoicedCommandHandler {
             L2HelperNewbieSetTitle = L2HelperProperties.getProperty("L2HelperNewbieSetTitle", "Use voice .helper");
             L2HelperNewbieSetNameColor = L2HelperProperties.getProperty("L2HelperNewbieSetNameColor", "");
             L2HelperNewbieSetTitleColor = L2HelperProperties.getProperty("L2HelperNewbieSetTitleColor", "");
-            L2HelperNewbieRelogin = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieRelogin", "False"));
 
             this.getPropertiesRate();
 
@@ -773,9 +786,9 @@ public class Helper implements IVoicedCommandHandler {
                 int curEnchant = itemInstance.getEnchantLevel();
                 int Enchant = curEnchant + 1;
 
-                if(curEnchant < cfg[4])
+                if(curEnchant < 55)
                 {
-                    if(this.activeChar.destroyItemByItemId("Adena", 57, cfg[5], this.activeChar, true))
+                    if(this.activeChar.destroyItemByItemId("Adena", 57, 10000, this.activeChar, true))
                     {
                         this.activeChar.getInventory().unEquipItemInSlot(Inventory.PAPERDOLL_RHAND);
                         itemInstance.setEnchantLevel(Enchant);
@@ -792,12 +805,12 @@ public class Helper implements IVoicedCommandHandler {
                     }
                     else
                     {
-                        this.activeChar.sendMessage("Require "+cfg[5]+" adena.");
+                        this.activeChar.sendMessage("Require  adena.");
                     }
                 }
                 else
                 {
-                    this.activeChar.sendMessage("You have max allowed enchant +"+cfg[4]+" level.");
+                    this.activeChar.sendMessage("You have max allowed enchant level.");
                 }
             }
         }
@@ -829,17 +842,28 @@ public class Helper implements IVoicedCommandHandler {
 
             if(L2HelperNewbieSupport == true)
             {
-
                 this.activeChar.addItem("EtcItem", 21093, 5, this.activeChar, true); // 21093 - Sweet Fruit Cocktail
                 this.activeChar.addItem("EtcItem", 21094, 5, this.activeChar, true); // 21094 - Fresh Fruit Cocktail
                 this.activeChar.addItem("EtcItem", 20340, 1, this.activeChar, true); // 20339 - Rune of Experience Points 50% - 7-day limited period
                 this.activeChar.addItem("EtcItem", 20346, 1, this.activeChar, true); // 20346 - Rune of SP 50% - 7-day limited period
-                this.activeChar.addItem("EtcItem", 20392, 1, this.activeChar, true); // 20346 - Vitality Replenishing Potion
+                this.activeChar.addItem("EtcItem", 20392, 5, this.activeChar, true); // 20346 - Vitality Replenishing Potion
             }
 
             if(!"".equals(L2HelperNewbieSetTitle))
             {
                 this.activeChar.setTitle(L2HelperNewbieSetTitle);
+                this.activeChar.broadcastTitleInfo();
+            }
+
+            if(!"".equals(L2HelperNewbieSetNameColor))
+            {
+				this.activeChar.getAppearance().setTitleColor(Integer.decode("0x" + L2HelperNewbieSetNameColor));
+                this.activeChar.broadcastTitleInfo();
+            }
+
+            if(!"".equals(L2HelperNewbieSetTitleColor))
+            {
+                this.activeChar.getAppearance().setNameColor(Integer.decode("0x" + L2HelperNewbieSetTitleColor));
                 this.activeChar.broadcastTitleInfo();
             }
 
@@ -910,6 +934,11 @@ public class Helper implements IVoicedCommandHandler {
                 }
 
                 statement.close();
+
+                this.activeChar.getMacros().restore();
+                this.activeChar.getMacros().sendUpdate();
+                this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
+
             }
             catch (Exception e)
             {
@@ -930,6 +959,7 @@ public class Helper implements IVoicedCommandHandler {
                 if(L2HelperNewbieGetAllSkill == true && Config.AUTO_LEARN_SKILLS == false)
                 {
                     this.activeChar.getAllSkills();
+                    this.activeChar.sendSkillList();
                 }
 
                 this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
@@ -939,11 +969,6 @@ public class Helper implements IVoicedCommandHandler {
             else
             {
                 this.activeChar.sendMessage("You must specify level between 1 and " + ExperienceTable.getInstance().getMaxLevel() + ".");
-            }
-
-            if(L2HelperNewbieRelogin == true)
-            {
-                this.activeChar.logout(false);
             }
 
         }
@@ -1030,18 +1055,18 @@ public class Helper implements IVoicedCommandHandler {
     {
         try
         {
-            if(this.activeChar.destroyItemByItemId("Adena", 57, cfg[2], this.activeChar, true))
+            if(this.activeChar.destroyItemByItemId("Adena", 57, 10000, this.activeChar, true))
             {
                 this.activeChar.setCurrentHpMp(this.activeChar.getMaxHp(), this.activeChar.getMaxMp());
                 this.activeChar.setCurrentCp(this.activeChar.getMaxCp());
                 this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
                 this.activeChar.sendPacket(new UserInfo(this.activeChar));
                 this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
-                this.activeChar.sendMessage(cfg[2] + " adena decreased and set max HP MP CP");
+                this.activeChar.sendMessage(" adena decreased and set max HP MP CP");
             }
             else
             {
-                this.activeChar.sendMessage("Require "+cfg[2]+" adena.");
+                this.activeChar.sendMessage("Require  adena.");
             }
         }
         catch (Exception e)
