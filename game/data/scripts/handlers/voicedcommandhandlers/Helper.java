@@ -17,6 +17,7 @@ package handlers.voicedcommandhandlers;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
 */
+import com.l2jserver.Config;
 import com.l2jserver.L2DatabaseFactory;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
@@ -81,6 +82,15 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean L2HelperRecommend;
 
     private static boolean L2HelperNewbie;
+    private static Integer L2HelperNewbieStartLevel;
+    private static boolean L2HelperNewbieGetAllSkill;
+    private static boolean L2HelperNewbieSupport;
+    private static Long    L2HelperNewbieSupportAdena;
+    private static boolean L2HelperNewbieSetNoble;
+    private static String  L2HelperNewbieSetTitle;
+    private static String  L2HelperNewbieSetNameColor;
+    private static String  L2HelperNewbieSetTitleColor;
+    private static boolean L2HelperNewbieRelogin;
 
     @Override
     public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
@@ -346,6 +356,17 @@ public class Helper implements IVoicedCommandHandler {
             Consumable.put("L2HelperRecommendItem", L2HelperProperties.getProperty("L2HelperRecommendItem", "5575"));
             Consumable.put("L2HelperRecommendItemCount", L2HelperProperties.getProperty("L2HelperRecommendItemCount", "10000"));
 
+            L2HelperNewbie = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbie", "True"));
+            L2HelperNewbieStartLevel = Integer.parseInt(L2HelperProperties.getProperty("L2HelperNewbieStartLevel", "0"));
+            L2HelperNewbieGetAllSkill = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieGetAllSkill", "False"));
+            L2HelperNewbieSupport = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieSupport", "True"));
+            L2HelperNewbieSupportAdena = Long.parseLong(L2HelperProperties.getProperty("L2HelperNewbieSupportAdena", "0"));
+            L2HelperNewbieSetNoble = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieSetNoble", "False"));
+            L2HelperNewbieSetTitle = L2HelperProperties.getProperty("L2HelperNewbieSetTitle", "Use voice .helper");
+            L2HelperNewbieSetNameColor = L2HelperProperties.getProperty("L2HelperNewbieSetNameColor", "");
+            L2HelperNewbieSetTitleColor = L2HelperProperties.getProperty("L2HelperNewbieSetTitleColor", "");
+            L2HelperNewbieRelogin = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieRelogin", "False"));
+
             this.getPropertiesRate();
 
             this.getPropertiesCache();
@@ -415,6 +436,15 @@ public class Helper implements IVoicedCommandHandler {
                     Count = (Count / L2HelperPriceRate);
                 }
                 Consumable.put("L2HelperRecommendItemCount", Double.toString(Count));
+
+                // Recommend
+                Count = Double.parseDouble(Long.toString(L2HelperNewbieSupportAdena));
+                if(L2HelperPriceRate > 1.0) {
+                    Count = (Count * L2HelperPriceRate);
+                } else {
+                    Count = (Count / L2HelperPriceRate);
+                }
+                L2HelperNewbieSupportAdena = Long.parseLong(Double.toString(Count));
             }
         }
     }
@@ -785,38 +815,33 @@ public class Helper implements IVoicedCommandHandler {
         try
         {
             this.activeChar.sendMessage("For full funcionality usage, you must relogin. AutoDisconnect!");
-
             this.activeChar.setNewbie(0);
-            this.activeChar.setNoble(true);
-            this.activeChar.addItem("Adena", 57, 10000000, this.activeChar, true);
-            /*
-                21093 - Sweet Fruit Cocktail
-                21094 - Fresh Fruit Cocktail
-            */
-            /*
-                21091 - Rune of Experience Points 50% 7-Day Pack
-                21092 - Rune of SP 50% 7-Day Pack
-            */
-            /*
-                <item id="20335" type="EtcItem" name="Rune of Experience Points 30% - 5-hour limited period">
-                <item id="20336" type="EtcItem" name="Rune of Experience Points 50% - 5-hour limited period">
-                <item id="20337" type="EtcItem" name="Rune of Experience Points 30% - 10-hour limited period">
-                <item id="20338" type="EtcItem" name="Rune of Experience Points 50% - 10-hour limited period">
-                <item id="20339" type="EtcItem" name="Rune of Experience Points 30% - 7-day limited period">
-                <item id="20340" type="EtcItem" name="Rune of Experience Points 50% - 7-day limited period">
-             */
-            /*
-                <item id="20341" type="EtcItem" name="Rune of SP 30% - 5-hour limited period">
-                <item id="20342" type="EtcItem" name="Rune of SP 50% - 5-hour limited period">
-                <item id="20343" type="EtcItem" name="Rune of SP 30% - 10-hour limited period">
-                <item id="20344" type="EtcItem" name="Rune of SP 50% - 10-hour limited period">
-                <item id="20345" type="EtcItem" name="Rune of SP 30% - 7-day limited period">
-                <item id="20346" type="EtcItem" name="Rune of SP 50% - 7-day limited period">
-             */
-            /*
-                <item id="20391" type="EtcItem" name="Vitality Maintaining Potion">
-                <item id="20392" type="EtcItem" name="Vitality Replenishing Potion">
-             */
+
+            if(L2HelperNewbieSetNoble == true)
+            {
+                this.activeChar.setNoble(true);
+            }
+
+            if(L2HelperNewbieSupportAdena != 0)
+            {
+                this.activeChar.addItem("Adena", 57, L2HelperNewbieSupportAdena, this.activeChar, true);
+            }
+
+            if(L2HelperNewbieSupport == true)
+            {
+
+                this.activeChar.addItem("EtcItem", 21093, 5, this.activeChar, true); // 21093 - Sweet Fruit Cocktail
+                this.activeChar.addItem("EtcItem", 21094, 5, this.activeChar, true); // 21094 - Fresh Fruit Cocktail
+                this.activeChar.addItem("EtcItem", 20340, 1, this.activeChar, true); // 20339 - Rune of Experience Points 50% - 7-day limited period
+                this.activeChar.addItem("EtcItem", 20346, 1, this.activeChar, true); // 20346 - Rune of SP 50% - 7-day limited period
+                this.activeChar.addItem("EtcItem", 20392, 1, this.activeChar, true); // 20346 - Vitality Replenishing Potion
+            }
+
+            if(!"".equals(L2HelperNewbieSetTitle))
+            {
+                this.activeChar.setTitle(L2HelperNewbieSetTitle);
+                this.activeChar.broadcastTitleInfo();
+            }
 
 
             try (Connection con = L2DatabaseFactory.getInstance().getConnection())
@@ -841,7 +866,8 @@ public class Helper implements IVoicedCommandHandler {
                 statement.setInt(7, 0);
                 statement.execute();
 
-                if(this.activeChar.isGM()) {
+                if(this.activeChar.isGM()) // For GMs
+                {
                     statement = con.prepareStatement("INSERT INTO character_macroses (charId,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)");
                     statement.setInt(1, this.activeChar.getObjectId());
                     statement.setInt(2, 1001);
@@ -884,14 +910,13 @@ public class Helper implements IVoicedCommandHandler {
                 }
 
                 statement.close();
-                this.activeChar.logout(false);
             }
             catch (Exception e)
             {
                 _log.log(Level.WARNING, "", e);
             }
 
-            if ((40 >= 1) && (40 <= ExperienceTable.getInstance().getMaxLevel()))
+            if ((L2HelperNewbieStartLevel != 0) && (40 >= 1) && (40 <= ExperienceTable.getInstance().getMaxLevel()))
             {
                 long pXp = this.activeChar.getExp();
                 long tXp = ExperienceTable.getInstance().getExpForLevel(40);
@@ -902,6 +927,11 @@ public class Helper implements IVoicedCommandHandler {
                     this.activeChar.addExpAndSp(tXp - pXp, 0);
                 }
 
+                if(L2HelperNewbieGetAllSkill == true && Config.AUTO_LEARN_SKILLS == false)
+                {
+                    this.activeChar.getAllSkills();
+                }
+
                 this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
                 this.activeChar.sendPacket(new UserInfo(this.activeChar));
                 this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
@@ -910,6 +940,12 @@ public class Helper implements IVoicedCommandHandler {
             {
                 this.activeChar.sendMessage("You must specify level between 1 and " + ExperienceTable.getInstance().getMaxLevel() + ".");
             }
+
+            if(L2HelperNewbieRelogin == true)
+            {
+                this.activeChar.logout(false);
+            }
+
         }
         catch (Exception e)
         {
@@ -932,10 +968,10 @@ public class Helper implements IVoicedCommandHandler {
                 {
                     this.Buff(prm[i], null);
                 }
-                if(i == 3)
+                /*if(i == 3)
                 {
                     this.Buff(prm[2], prm[i]);
-                }
+                }*/
             }
         }
     }
