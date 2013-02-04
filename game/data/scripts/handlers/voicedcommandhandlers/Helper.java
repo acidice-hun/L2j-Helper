@@ -41,6 +41,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -52,7 +53,6 @@ public class Helper implements IVoicedCommandHandler {
 
     private static final String[] _voicedCommands = {
         "helper"
-        //,"premium" return info if character premium and endDate
     };
 
 
