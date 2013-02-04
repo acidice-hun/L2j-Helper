@@ -107,17 +107,9 @@ public class Helper implements IVoicedCommandHandler {
 
         if (L2Helper == true && command.equals("helper"))
         {
-
             this.html       = null;
             this.view       = "view";
             this.activeChar = activeChar;
-
-            if(L2HelperProhibited == false)
-            {
-                this.activeChar.stopPunishTask(true);
-                this.activeChar.setPunishTimer(0);
-                this.activeChar.setPunishLevel(L2PcInstance.PunishLevel.NONE, 0);
-            }
 
             if(this.check() == false)
             {
