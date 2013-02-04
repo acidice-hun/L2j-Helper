@@ -20,20 +20,16 @@ package handlers.voicedcommandhandlers;
 import com.l2jserver.L2DatabaseFactory;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
-import com.l2jserver.gameserver.datatables.ItemTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
-import com.l2jserver.gameserver.model.L2TradeList;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jserver.gameserver.model.actor.stat.PcStat;
 import com.l2jserver.gameserver.model.itemcontainer.Inventory;
 import com.l2jserver.gameserver.model.items.instance.L2ItemInstance;
 import com.l2jserver.gameserver.model.zone.ZoneId;
-import com.l2jserver.gameserver.network.serverpackets.BuyList;
 import com.l2jserver.gameserver.network.serverpackets.CharInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
-import com.l2jserver.gameserver.network.serverpackets.ExBuySellList;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
@@ -44,7 +40,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -68,12 +63,10 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean Properties = false;
 
     private static HashMap<String, String>    Consumable   = new HashMap<String, String>();
+    private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillSongs   = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillDances  = new HashMap<Integer, String[]>();
-    private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillSpecial = new HashMap<Integer, String[]>();
-
-	private final Map<Integer, L2TradeList> _lists = new FastMap<>();
 
     private static boolean L2Helper;
     private static boolean L2HelperIsCombat;
@@ -86,6 +79,8 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean L2HelperLevelDown;
     private static boolean L2HelperVitaltity;
     private static boolean L2HelperRecommend;
+
+    private static boolean L2HelperNewbie;
 
     @Override
     public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
@@ -236,7 +231,7 @@ public class Helper implements IVoicedCommandHandler {
         this.html += "</td></tr></table>";
         this.html += "</body></html>";
     }
-    private void getBufferH1()
+    private void getBufferBuffs()
     {
         /*
         html += "<tr>";
@@ -247,11 +242,15 @@ public class Helper implements IVoicedCommandHandler {
         html += "</tr>";
         */
     }
-    private void getBufferH2()
+    private void getBufferSongs()
     {
 
     }
-    private void getBufferH3()
+    private void getBufferDances()
+    {
+
+    }
+    private void getBufferSpecial()
     {
 
     }
@@ -261,7 +260,7 @@ public class Helper implements IVoicedCommandHandler {
      */
     private void getCommand()
     {
-        if(this.activeChar.getNewbie() == 1 && this.activeChar.getClassId().level() == 0)
+        if((L2HelperNewbie == true) && (this.activeChar.getNewbie() == 1) && (this.activeChar.getClassId().level() == 0))
         {
             this.Nwb();
         }
@@ -914,6 +913,75 @@ public class Helper implements IVoicedCommandHandler {
             _log.log(Level.WARNING, "", e);
         }
     }
+    private void Buff()
+    {
+        if(this.param != null)
+        {
+            String[] prm = this.param.split(" ", 4);
+            for (int i = 0; i < prm.length; i++)
+            {
+                if(i == 2)
+                {
+                    this.Buff(prm[i], null);
+                }
+                if(i == 3)
+                {
+                    this.Buff(prm[2], prm[i]);
+                }
+            }
+        }
+    }
+    private void Buff(String ID, String Skill)
+    {
+        if(ID != null)
+        {
+            switch(ID)
+            {
+                case "h1": // HTML Buffs
+                    this.BuffGet(1, Skill);
+                    this.getBufferBuffs();
+                    break;
+
+                case "h2": // HTML Songs
+                    this.BuffGet(2, Skill);
+                    this.getBufferSongs();
+                    break;
+
+                case "h3": // HTML Dances
+                    this.BuffGet(3, Skill);
+                    this.getBufferDances();
+                    break;
+
+                case "h4": // HTML Special
+                    this.BuffGet(4, Skill);
+                    this.getBufferSpecial();
+                    break;
+
+                case "r1":
+                    this.activeChar.stopAllEffects();
+                    break;
+            }
+        }
+
+    }
+    private void BuffGet(Integer Type, String Skill)
+    {
+        if(Skill != null)
+        {
+            Integer id = Integer.parseInt(Skill);
+            String[] skill;
+
+            switch(Type)
+            {
+                case 1: // Get Buff
+                    skill = SkillBuffs.get(id);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    this.getBufferBuffs();
+                    break;
+            }
+        }
+
+    }
     private void BuffRecharge()
     {
         try
@@ -937,102 +1005,6 @@ public class Helper implements IVoicedCommandHandler {
             this.activeChar.sendMessage("A problem occured! Contacting to server administrator.");
             _log.log(Level.WARNING, "", e);
         }
-    }
-    private void Buff()
-    {
-        if(this.param != null)
-        {
-            String[] prm = this.param.split(" ", 3);
-            for (int i = 0; i < prm.length; i++)
-            {
-                if(i == 2)
-                {
-                    this.Buff(prm[i]);
-                }
-            }
-        }
-    }
-    private void Buff(String ID)
-    {
-        if(ID != null)
-        {
-            switch(ID)
-            {
-                case "h1": // HTML Songs
-                    this.getBufferH1();
-                    break;
-
-                case "h2": // HTML Dances
-                    this.getBufferH2();
-                    break;
-
-                case "h3": // HTML Buffs
-                    this.getBufferH3();
-                    break;
-
-                case "r1":
-                    this.activeChar.stopAllEffects();
-                    break;
-
-                case "c1":
-                    SkillTable.getInstance().getInfo(4360,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1388,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4342,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4359,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4358,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4357,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1354,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4350,4).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4347,6).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4346,4).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4344,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4345,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1393,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1392,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4352,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4349,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(274,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1182,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1189,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(275,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(271,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(310,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(269,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(268,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(267,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(264,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1356,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1352,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(304,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(349,1).getEffects(this.activeChar,this.activeChar);
-                    break;
-
-                case "c2":
-                    SkillTable.getInstance().getInfo(4352,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4342,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4351,6).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4355,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4353,6).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4356,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4350,4).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4349,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4347,6).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(4344,3).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(1303,2).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(365,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(349,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(364,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(304,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(276,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(273,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(267,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(268,1).getEffects(this.activeChar,this.activeChar);
-                    SkillTable.getInstance().getInfo(264,1).getEffects(this.activeChar,this.activeChar);
-                    break;
-
-            }
-        }
-
     }
 
 }
