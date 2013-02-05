@@ -23,6 +23,8 @@ import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
+import com.l2jserver.gameserver.model.L2Macro;
+import com.l2jserver.gameserver.model.L2Macro.L2MacroCmd;
 import com.l2jserver.gameserver.model.L2ShortCut;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -866,84 +868,25 @@ public class Helper implements IVoicedCommandHandler {
                 this.activeChar.broadcastTitleInfo();
             }
 
+            L2MacroCmd[] commands = new L2MacroCmd[0];
+            commands[0] = new L2MacroCmd(0, 3, 0, 0, ".helper;");
+            this.activeChar.getMacros().registerMacro(new L2Macro(1000, 3, "Helper", "", "", commands));
+            new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(0, 3, 4, 1000, 0, 0));
 
-            try (Connection con = L2DatabaseFactory.getInstance().getConnection())
+            if(this.activeChar.isGM()) // For GMs
             {
-                PreparedStatement statement = con.prepareStatement("INSERT INTO character_macroses (charId,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)");
-                statement.setInt(1, this.activeChar.getObjectId());
-                statement.setInt(2, 1000);
-                statement.setInt(3, 3);
-                statement.setString(4, "Helper");
-                statement.setString(5, "");
-                statement.setString(6, "");
-                statement.setString(7, "3,0,0,.helper;");
-                statement.execute();
-
-                statement = con.prepareStatement("INSERT INTO character_shortcuts (charId,slot,page,type,shortcut_id,level,class_index) values(?,?,?,?,?,?,?)");
-                statement.setInt(1, this.activeChar.getObjectId());
-                statement.setInt(2, 0);
-                statement.setInt(3, 3);
-                statement.setInt(4, 4);
-                statement.setInt(5, 1000);
-                statement.setString(6, "0");
-                statement.setInt(7, 0);
-                statement.execute();
-
-                if(this.activeChar.isGM()) // For GMs
-                {
-                    statement = con.prepareStatement("INSERT INTO character_macroses (charId,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)");
-                    statement.setInt(1, this.activeChar.getObjectId());
-                    statement.setInt(2, 1001);
-                    statement.setInt(3, 4);
-                    statement.setString(4, "Admin");
-                    statement.setString(5, "");
-                    statement.setString(6, "");
-                    statement.setString(7, "3,0,0,//admin;");
-                    statement.execute();
-
-                    statement = con.prepareStatement("INSERT INTO character_shortcuts (charId,slot,page,type,shortcut_id,level,class_index) values(?,?,?,?,?,?,?)");
-                    statement.setInt(1, this.activeChar.getObjectId());
-                    statement.setInt(2, 1);
-                    statement.setInt(3, 3);
-                    statement.setInt(4, 4);
-                    statement.setInt(5, 1001);
-                    statement.setString(6, "0");
-                    statement.setInt(7, 0);
-                    statement.execute();
-
-                    statement = con.prepareStatement("INSERT INTO character_macroses (charId,id,icon,name,descr,acronym,commands) values(?,?,?,?,?,?,?)");
-                    statement.setInt(1, this.activeChar.getObjectId());
-                    statement.setInt(2, 1002);
-                    statement.setInt(3, 5);
-                    statement.setString(4, "GMShop");
-                    statement.setString(5, "");
-                    statement.setString(6, "");
-                    statement.setString(7, "3,0,0,//gmshop;");
-                    statement.execute();
-
-                    statement = con.prepareStatement("INSERT INTO character_shortcuts (charId,slot,page,type,shortcut_id,level,class_index) values(?,?,?,?,?,?,?)");
-                    statement.setInt(1, this.activeChar.getObjectId());
-                    statement.setInt(2, 2);
-                    statement.setInt(3, 3);
-                    statement.setInt(4, 4);
-                    statement.setInt(5, 1002);
-                    statement.setString(6, "0");
-                    statement.setInt(7, 0);
-                    statement.execute();
-                }
-
-                statement.close();
-
-                this.activeChar.getMacros().restore();
-                this.activeChar.getMacros().sendUpdate();
-                new ShortCuts(this.activeChar).restore();
-                this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
-
+                commands[0] = new L2MacroCmd(0, 3, 0, 0, "//admin;");
+                this.activeChar.getMacros().registerMacro(new L2Macro(1001, 4, "Admin", "", "", commands));
+                new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(2, 3, 4, 1001, 0, 0));
+                commands[0] = new L2MacroCmd(0, 3, 0, 0, "//gmshop;");
+                this.activeChar.getMacros().registerMacro(new L2Macro(1002, 5, "GMShop", "", "", commands));
+                new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(3, 3, 4, 1002, 0, 0));
             }
-            catch (Exception e)
-            {
-                _log.log(Level.WARNING, "", e);
-            }
+
+            //this.activeChar.getMacros().restore();
+            this.activeChar.getMacros().sendUpdate();
+            //new ShortCuts(this.activeChar).restore();
+            this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
 
             if ((L2HelperNewbieStartLevel != 0) && (40 >= 1) && (40 <= ExperienceTable.getInstance().getMaxLevel()))
             {
