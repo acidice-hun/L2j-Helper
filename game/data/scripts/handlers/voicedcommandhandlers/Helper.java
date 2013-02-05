@@ -902,7 +902,6 @@ public class Helper implements IVoicedCommandHandler {
             }
 
             this.activeChar.getMacros().sendUpdate();
-            //this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
 
             if ((L2HelperNewbieStartLevel != 0) && (40 >= 1) && (40 <= ExperienceTable.getInstance().getMaxLevel()))
             {
