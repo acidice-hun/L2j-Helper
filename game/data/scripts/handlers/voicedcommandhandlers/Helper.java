@@ -897,7 +897,14 @@ public class Helper implements IVoicedCommandHandler {
                 commands.clear();
                 commands.add(new L2MacroCmd(0, 3, 0, 0, "//heal"));
                 this.activeChar.getMacros().registerMacro(new L2Macro(1003, 6, "Heal", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
-                sc = new L2ShortCut(3, 3, 4, 1003, 0, 0);
+                sc = new L2ShortCut(4, 3, 4, 1003, 0, 0);
+                new ShortCuts(this.activeChar).registerShortCut(sc);
+                this.activeChar.sendPacket(new ShortCutRegister(sc));
+
+                commands.clear();
+                commands.add(new L2MacroCmd(0, 3, 0, 0, "//kill 500"));
+                this.activeChar.getMacros().registerMacro(new L2Macro(1004, 2, "Kill Area", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
+                sc = new L2ShortCut(5, 3, 4, 1004, 0, 0);
                 new ShortCuts(this.activeChar).registerShortCut(sc);
                 this.activeChar.sendPacket(new ShortCutRegister(sc));
             }
@@ -929,7 +936,6 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            this.activeChar.sendMessage("A problem occured! Contacting to server administrator.");
             _log.log(Level.WARNING, "", e);
         }
     }
