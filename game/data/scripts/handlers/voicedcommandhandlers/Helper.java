@@ -827,7 +827,7 @@ public class Helper implements IVoicedCommandHandler {
     {
         try
         {
-            this.activeChar.sendMessage("For full funcionality usage, you must relogin. AutoDisconnect!");
+            this.activeChar.sendMessage("L2Helper support for newbie characters.");
             this.activeChar.setNewbie(0);
 
             if(L2HelperNewbieSetNoble == true)
@@ -842,11 +842,12 @@ public class Helper implements IVoicedCommandHandler {
 
             if(L2HelperNewbieSupport == true)
             {
-                this.activeChar.addItem("EtcItem", 21093, 5, this.activeChar, true); // 21093 - Sweet Fruit Cocktail
-                this.activeChar.addItem("EtcItem", 21094, 5, this.activeChar, true); // 21094 - Fresh Fruit Cocktail
-                this.activeChar.addItem("EtcItem", 21091, 1, this.activeChar, true); // 20339 - Rune of Experience Points 50% 7-Day Packd
-                this.activeChar.addItem("EtcItem", 21092, 1, this.activeChar, true); // 20346 - Rune of SP 50% 7-Day Pack
-                this.activeChar.addItem("EtcItem", 20392, 5, this.activeChar, true); // 20346 - Vitality Replenishing Potion
+                this.activeChar.addItem("EtcItem", 21093, 5, this.activeChar, true); // Sweet Fruit Cocktail
+                this.activeChar.addItem("EtcItem", 21094, 5, this.activeChar, true); // Fresh Fruit Cocktail
+                this.activeChar.addItem("EtcItem", 21091, 1, this.activeChar, true); // Rune of Experience Points 50% 7-Day Packd
+                this.activeChar.addItem("EtcItem", 21092, 1, this.activeChar, true); // Rune of SP 50% 7-Day Pack
+                this.activeChar.addItem("EtcItem", 20391, 1, this.activeChar, true); // Vitality Maintaining Potion
+                this.activeChar.addItem("EtcItem", 20392, 1, this.activeChar, true); // Vitality Replenishing Potion
             }
 
             if(!"".equals(L2HelperNewbieSetTitle))
@@ -923,10 +924,6 @@ public class Helper implements IVoicedCommandHandler {
                 this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
                 this.activeChar.sendPacket(new UserInfo(this.activeChar));
                 this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
-            }
-            else
-            {
-                this.activeChar.sendMessage("You must specify level between 1 and " + ExperienceTable.getInstance().getMaxLevel() + ".");
             }
 
         }
