@@ -23,6 +23,7 @@ import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
+import com.l2jserver.gameserver.model.L2ShortCut;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2jserver.gameserver.model.actor.stat.PcStat;
@@ -33,6 +34,7 @@ import com.l2jserver.gameserver.network.serverpackets.CharInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
+import com.l2jserver.gameserver.model.ShortCuts;
 import com.l2jserver.gameserver.network.serverpackets.ShortCutInit;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
@@ -41,7 +43,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 
@@ -688,7 +689,7 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            _log.log(Level.WARNING, "", e);
+            _log.log(Level.WARNING, "L2Helper change Level error.", e);
         }
     }
     private void setVitality()
@@ -722,7 +723,7 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            _log.log(Level.WARNING, "", e);
+            _log.log(Level.WARNING, "L2Helper change Vitality error.", e);
         }
     }
     private void setRec()
@@ -761,7 +762,7 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            _log.log(Level.WARNING, "", e);
+            _log.log(Level.WARNING, "L2Helper change Recommend error.", e);
         }
     }
     private void setEnchant()
@@ -814,7 +815,7 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            _log.log(Level.WARNING, "", e);
+            _log.log(Level.WARNING, "L2Helper change enchant error.", e);
         }
     }
 
@@ -935,6 +936,7 @@ public class Helper implements IVoicedCommandHandler {
 
                 this.activeChar.getMacros().restore();
                 this.activeChar.getMacros().sendUpdate();
+                new ShortCuts(this.activeChar).restore();
                 this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
 
             }
