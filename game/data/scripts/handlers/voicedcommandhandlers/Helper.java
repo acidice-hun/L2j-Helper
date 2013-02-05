@@ -84,9 +84,20 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean L2HelperVitaltity;
     private static boolean L2HelperRecommend;
 
+    private static boolean L2HelperEnchant;
+    private static Integer L2HelperEnchantMax;
+    private static Integer L2HelperEnchantItem;
+    private static Long    L2HelperEnchantItemCount;
+    private static boolean L2HelperEnchantWeapon;
+    private static boolean L2HelperEnchantArmor;
+    private static boolean L2HelperEnchantJewels;
+    private static boolean L2HelperEnchantOther;
+    private static boolean L2HelperEnchantAttribute;
+
     private static boolean L2HelperNewbie;
     private static Integer L2HelperNewbieStartLevel;
     private static boolean L2HelperNewbieGetAllSkill;
+    private static boolean L2HelperNewbieGetProtection;
     private static boolean L2HelperNewbieSupport;
     private static Long    L2HelperNewbieSupportAdena;
     private static boolean L2HelperNewbieSetNoble;
@@ -187,7 +198,7 @@ public class Helper implements IVoicedCommandHandler {
                 break;
 
             case "ench":
-                this.getDefault();
+                this.getEnchant();
                 this.setEnchant();
                 break;
 
@@ -247,9 +258,20 @@ public class Helper implements IVoicedCommandHandler {
             Consumable.put("L2HelperRecommendItem", L2HelperProperties.getProperty("L2HelperRecommendItem", "5575"));
             Consumable.put("L2HelperRecommendItemCount", L2HelperProperties.getProperty("L2HelperRecommendItemCount", "10000"));
 
+            L2HelperEnchant = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchant", "True"));
+            L2HelperEnchantMax = Integer.parseInt(L2HelperProperties.getProperty("L2HelperEnchantMax", "65535"));
+            L2HelperEnchantItem = Integer.parseInt(L2HelperProperties.getProperty("L2HelperEnchantItem", "5575"));
+            L2HelperEnchantItemCount = Long.parseLong(L2HelperProperties.getProperty("L2HelperEnchantItemCount", "1000000000"));
+            L2HelperEnchantWeapon = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantWeapon", "True"));
+            L2HelperEnchantArmor = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantArmor", "True"));
+            L2HelperEnchantJewels = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantJewels", "True"));
+            L2HelperEnchantOther = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantOther", "True"));
+            L2HelperEnchantAttribute = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantAttribute", "True"));
+
             L2HelperNewbie = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbie", "True"));
             L2HelperNewbieStartLevel = Integer.parseInt(L2HelperProperties.getProperty("L2HelperNewbieStartLevel", "0"));
             L2HelperNewbieGetAllSkill = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieGetAllSkill", "False"));
+            L2HelperNewbieGetProtection = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieGetProtection", "False"));
             L2HelperNewbieSupport = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieSupport", "True"));
             L2HelperNewbieSupportAdena = Long.parseLong(L2HelperProperties.getProperty("L2HelperNewbieSupportAdena", "0"));
             L2HelperNewbieSetNoble = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbieSetNoble", "False"));
@@ -540,6 +562,7 @@ public class Helper implements IVoicedCommandHandler {
             if(this.activeChar.getSponsor() == 0) {
                 this.html += " : You not Premium user.";
             }
+            if(L2HelperLevelUp == true || L2HelperLevelDown == true || L2HelperVitaltity == true || L2HelperRecommend == true) {
             this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
                 if(L2HelperLevelUp == true || L2HelperLevelDown == true) {
                     this.html += "<tr>";
@@ -555,20 +578,29 @@ public class Helper implements IVoicedCommandHandler {
                     }
                     this.html += "</tr>";
                 }
-                this.html += "<tr>";
+                if(L2HelperVitaltity == true || L2HelperRecommend == true) {
+                    this.html += "<tr>";
                     if(L2HelperVitaltity == true) {
                         this.html += "<td align=center><button action=\"bypass -h voice .helper view vitality\" value=\"Vitality\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                     } else {
                         this.html += "<td></td>";
                     }
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view rec\" value=\"Recommend\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
+                    if(L2HelperRecommend == true) {
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view rec\" value=\"Recommend\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else {
+                        this.html += "<td></td>";
+                    }
+                    this.html += "</tr>";
+                }
             this.html += "</table>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view ench\" value=\"Enchant\" width=260 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+            }
+            if(L2HelperEnchant == true) {
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view ench\" value=\"Enchant\" width=260 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            }
             this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
         this.html += "</td></tr></table>";
         this.html += "</body></html>";
@@ -579,6 +611,65 @@ public class Helper implements IVoicedCommandHandler {
         if (this.html == null)
         {
             this.html = "<html><title>Lineage II Helper</title><body><br><br><center><font color=LEVEL>404:</font> File Not Found<br><br>data/html/helper/helper.htm</center></body></html>";
+        }
+    }
+    private void getEnchant()
+    {
+        if(L2HelperEnchant == true)
+        {
+            String type = "";
+
+            if(L2HelperEnchantWeapon == true) {
+                type += "Weapon";
+            }
+
+            if(L2HelperEnchantArmor == true) {
+                if(L2HelperEnchantWeapon == true) {
+                    type += ";";
+                }
+                type += "Helmet;Chest;Leggings;Gloves;Boots;Shield";
+            }
+
+            if(L2HelperEnchantJewels == true) {
+                if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true) {
+                    type += ";";
+                }
+                type += "Necklace;UpperEarring;LowerEarring;UpperRing;LowerRing";
+            }
+
+            if(L2HelperEnchantOther == true) {
+                if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true || L2HelperEnchantJewels == true) {
+                    type += ";";
+                }
+                type += "Cloak;Shirt;Belt";
+            }
+
+            this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr><td width=256 height=80 background=\"L2UI_CT1.OlympiadWnd_DF_GrandTexture\"></td></tr>";
+                this.html += "</table>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><combobox width=140 var=enchbox list="+type+"></td>";
+                    this.html += "</tr>";
+                    this.html += "<tr>";
+                    this.html += "<td><br><br><br></td>";
+                    this.html += "</tr>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view ench $enchbox\" value=\"Add Enchant\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+                this.html += "<br><br><br><br><br><br><br><br><br><br><br>";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
         }
     }
     private void getBuffer()
@@ -770,47 +861,140 @@ public class Helper implements IVoicedCommandHandler {
     {
         try
         {
-            /*
-             * Inventory method, Weapon, Armor, ...
-             */
-            L2ItemInstance itemInstance = null;
-            L2ItemInstance parmorInstance = this.activeChar.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
-
-            if ((parmorInstance != null) && (parmorInstance.getLocationSlot() == Inventory.PAPERDOLL_RHAND))
+            if(L2HelperEnchant == true)
             {
-                itemInstance = parmorInstance;
-            }
+                Integer id;
+                String type = "";
 
-            if(itemInstance != null)
-            {
-                int curEnchant = itemInstance.getEnchantLevel();
-                int Enchant = curEnchant + 1;
-
-                if(curEnchant < 55)
+                if(this.param != null)
                 {
-                    if(this.activeChar.destroyItemByItemId("Adena", 57, 10000, this.activeChar, true))
+                    String[] prm = this.param.split(" ", 3);
+                    for (int i = 0; i < prm.length; i++)
                     {
-                        this.activeChar.getInventory().unEquipItemInSlot(Inventory.PAPERDOLL_RHAND);
-                        itemInstance.setEnchantLevel(Enchant);
-                        this.activeChar.getInventory().equipItem(itemInstance);
-                        InventoryUpdate iu = new InventoryUpdate();
-                        iu.addModifiedItem(itemInstance);
+                        if(i == 2)
+                        {
+                            type = prm[i];
+                        }
+                    }
+                }
 
-                        this.activeChar.sendPacket(iu);
-                        this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
-                        this.activeChar.sendPacket(new UserInfo(this.activeChar));
-                        this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
-                        this.activeChar.sendMessage("Changed enchantment of " + this.activeChar.getName() + "'s " + itemInstance.getItem().getName() + " from " + curEnchant + " to " + Enchant + ".");
-                        this.activeChar.sendMessage("Changed the enchantment of your " + itemInstance.getItem().getName() + " from " + curEnchant + " to " + Enchant + ".");
+                if(!"".equals(type))
+                {
+                    switch(type)
+                    {
+                        case "Weapon":
+                            id = Inventory.PAPERDOLL_RHAND;
+                            break;
+                        case "Helmet":
+                            id = Inventory.PAPERDOLL_HEAD;
+                            break;
+                        case "Chest":
+                            id = Inventory.PAPERDOLL_CHEST;
+                            break;
+                        case "Leggings":
+                            id = Inventory.PAPERDOLL_LEGS;
+                            break;
+                        case "Gloves":
+                            id = Inventory.PAPERDOLL_GLOVES;
+                            break;
+                        case "Boots":
+                            id = Inventory.PAPERDOLL_FEET;
+                            break;
+                        case "Shield":
+                            id = Inventory.PAPERDOLL_LHAND;
+                            break;
+                        case "Necklace":
+                            id = Inventory.PAPERDOLL_NECK;
+                            break;
+                        case "UpperEarring":
+                            id = Inventory.PAPERDOLL_LEAR;
+                            break;
+                        case "LowerEarring":
+                            id = Inventory.PAPERDOLL_REAR;
+                            break;
+                        case "UpperRing":
+                            id = Inventory.PAPERDOLL_LFINGER;
+                            break;
+                        case "LowerRing":
+                            id = Inventory.PAPERDOLL_RFINGER;
+                            break;
+                        case "Cloak":
+                            id = Inventory.PAPERDOLL_CLOAK;
+                            break;
+                        case "Shirt":
+                            id = Inventory.PAPERDOLL_UNDER;
+                            break;
+                        case "Belt":
+                            id = Inventory.PAPERDOLL_BELT;
+                            break;
+                        default:
+                            id = -1;
+                            break;
+                    }
+
+                    if(L2HelperEnchantWeapon == false && "Weapon".equals(type)) {
+                        id = -1;
+                    }
+
+                    if(L2HelperEnchantArmor == false && ("Helmet".equals(type) || "Chest".equals(type) || "Leggings".equals(type) || "Gloves".equals(type) || "Boots".equals(type) || "Shield".equals(type))) {
+                        id = -1;
+                    }
+
+                    if(L2HelperEnchantJewels == false && ("Necklace".equals(type) || "UpperEarring".equals(type) || "LowerEarring".equals(type) || "UpperRing".equals(type) || "LowerRing".equals(type))) {
+                        id = -1;
+                    }
+
+                    if(L2HelperEnchantOther == false && ("Belt".equals(type) || "Shirt".equals(type) || "Cloak".equals(type))) {
+                        id = -1;
+                    }
+
+                    if(id == -1)
+                    {
+                        this.activeChar.sendMessage("Please select the type of enchant item.");
                     }
                     else
                     {
-                        this.activeChar.sendMessage("Require  adena.");
+                        L2ItemInstance itemInstance = null;
+                        L2ItemInstance parmorInstance = this.activeChar.getInventory().getPaperdollItem(id);
+
+                        if ((parmorInstance != null) && (parmorInstance.getLocationSlot() == id))
+                        {
+                            itemInstance = parmorInstance;
+                        }
+
+                        if(itemInstance != null)
+                        {
+                            int curEnchant = itemInstance.getEnchantLevel();
+                            int Enchant = curEnchant + 1;
+
+                            if(curEnchant < L2HelperEnchantMax)
+                            {
+                                if(this.activeChar.destroyItemByItemId("Item", L2HelperEnchantItem, L2HelperEnchantItemCount, this.activeChar, true))
+                                {
+                                    this.activeChar.getInventory().unEquipItemInSlot(id);
+                                    itemInstance.setEnchantLevel(Enchant);
+                                    this.activeChar.getInventory().equipItem(itemInstance);
+                                    InventoryUpdate iu = new InventoryUpdate();
+                                    iu.addModifiedItem(itemInstance);
+
+                                    this.activeChar.sendPacket(iu);
+                                    this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
+                                    this.activeChar.sendPacket(new UserInfo(this.activeChar));
+                                    this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
+                                    this.activeChar.sendMessage("Changed enchantment of " + this.activeChar.getName() + "'s " + itemInstance.getItem().getName() + " from " + curEnchant + " to " + Enchant + ".");
+                                    this.activeChar.sendMessage("Changed the enchantment of your " + itemInstance.getItem().getName() + " from " + curEnchant + " to " + Enchant + ".");
+                                }
+                                else
+                                {
+                                    this.activeChar.sendMessage("Not have require item or count.");
+                                }
+                            }
+                            else
+                            {
+                                this.activeChar.sendMessage("You have max allowed enchant level.");
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    this.activeChar.sendMessage("You have max allowed enchant level.");
                 }
             }
         }
@@ -866,6 +1050,11 @@ public class Helper implements IVoicedCommandHandler {
             {
                 this.activeChar.getAppearance().setNameColor(Integer.decode("0x" + L2HelperNewbieSetTitleColor));
                 this.activeChar.broadcastTitleInfo();
+            }
+
+            if(L2HelperNewbieGetProtection == true)
+            {
+                SkillTable.getInstance().getInfo(5182,1).getEffects(this.activeChar,this.activeChar);
             }
 
             List<L2MacroCmd> commands = new ArrayList<>();
