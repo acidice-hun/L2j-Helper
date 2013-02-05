@@ -18,7 +18,6 @@ package handlers.voicedcommandhandlers;
  *
 */
 import com.l2jserver.Config;
-import com.l2jserver.L2DatabaseFactory;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
@@ -37,15 +36,15 @@ import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.model.ShortCuts;
-import com.l2jserver.gameserver.network.serverpackets.ShortCutInit;
+import com.l2jserver.gameserver.network.serverpackets.ShortCutRegister;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -845,8 +844,8 @@ public class Helper implements IVoicedCommandHandler {
             {
                 this.activeChar.addItem("EtcItem", 21093, 5, this.activeChar, true); // 21093 - Sweet Fruit Cocktail
                 this.activeChar.addItem("EtcItem", 21094, 5, this.activeChar, true); // 21094 - Fresh Fruit Cocktail
-                this.activeChar.addItem("EtcItem", 20340, 1, this.activeChar, true); // 20339 - Rune of Experience Points 50% - 7-day limited period
-                this.activeChar.addItem("EtcItem", 20346, 1, this.activeChar, true); // 20346 - Rune of SP 50% - 7-day limited period
+                this.activeChar.addItem("EtcItem", 21091, 1, this.activeChar, true); // 20339 - Rune of Experience Points 50% 7-Day Packd
+                this.activeChar.addItem("EtcItem", 21092, 1, this.activeChar, true); // 20346 - Rune of SP 50% 7-Day Pack
                 this.activeChar.addItem("EtcItem", 20392, 5, this.activeChar, true); // 20346 - Vitality Replenishing Potion
             }
 
@@ -868,25 +867,42 @@ public class Helper implements IVoicedCommandHandler {
                 this.activeChar.broadcastTitleInfo();
             }
 
-            L2MacroCmd[] commands = new L2MacroCmd[0];
-            commands[0] = new L2MacroCmd(0, 3, 0, 0, ".helper;");
-            this.activeChar.getMacros().registerMacro(new L2Macro(1000, 3, "Helper", "", "", commands));
-            new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(0, 3, 4, 1000, 0, 0));
+            List<L2MacroCmd> commands = new ArrayList<>();
+            L2ShortCut sc;
+
+            commands.add(new L2MacroCmd(0, 3, 0, 0, ".helper"));
+            this.activeChar.getMacros().registerMacro(new L2Macro(1000, 3, "Helper", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
+
+            sc = new L2ShortCut(0, 3, 4, 1000, 0, 0);
+            new ShortCuts(this.activeChar).registerShortCut(sc);
+            this.activeChar.sendPacket(new ShortCutRegister(sc));
 
             if(this.activeChar.isGM()) // For GMs
             {
-                commands[0] = new L2MacroCmd(0, 3, 0, 0, "//admin;");
-                this.activeChar.getMacros().registerMacro(new L2Macro(1001, 4, "Admin", "", "", commands));
-                new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(2, 3, 4, 1001, 0, 0));
-                commands[0] = new L2MacroCmd(0, 3, 0, 0, "//gmshop;");
-                this.activeChar.getMacros().registerMacro(new L2Macro(1002, 5, "GMShop", "", "", commands));
-                new ShortCuts(this.activeChar).registerShortCut(new L2ShortCut(3, 3, 4, 1002, 0, 0));
+                commands.clear();
+                commands.add(new L2MacroCmd(0, 3, 0, 0, "//admin"));
+                this.activeChar.getMacros().registerMacro(new L2Macro(1001, 4, "Admin", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
+                sc = new L2ShortCut(1, 3, 4, 1001, 0, 0);
+                new ShortCuts(this.activeChar).registerShortCut(sc);
+                this.activeChar.sendPacket(new ShortCutRegister(sc));
+
+                commands.clear();
+                commands.add(new L2MacroCmd(0, 3, 0, 0, "//gmshop"));
+                this.activeChar.getMacros().registerMacro(new L2Macro(1002, 5, "GMShop", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
+                sc = new L2ShortCut(2, 3, 4, 1002, 0, 0);
+                new ShortCuts(this.activeChar).registerShortCut(sc);
+                this.activeChar.sendPacket(new ShortCutRegister(sc));
+
+                commands.clear();
+                commands.add(new L2MacroCmd(0, 3, 0, 0, "//heal"));
+                this.activeChar.getMacros().registerMacro(new L2Macro(1003, 6, "Heal", "", "", commands.toArray(new L2MacroCmd[commands.size()])));
+                sc = new L2ShortCut(3, 3, 4, 1003, 0, 0);
+                new ShortCuts(this.activeChar).registerShortCut(sc);
+                this.activeChar.sendPacket(new ShortCutRegister(sc));
             }
 
-            //this.activeChar.getMacros().restore();
             this.activeChar.getMacros().sendUpdate();
-            //new ShortCuts(this.activeChar).restore();
-            this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
+            //this.activeChar.sendPacket(new ShortCutInit(this.activeChar));
 
             if ((L2HelperNewbieStartLevel != 0) && (40 >= 1) && (40 <= ExperienceTable.getInstance().getMaxLevel()))
             {
