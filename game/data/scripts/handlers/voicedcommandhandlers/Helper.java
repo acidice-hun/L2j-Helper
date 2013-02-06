@@ -628,77 +628,86 @@ public class Helper implements IVoicedCommandHandler {
      */
     private void getDefault()
     {
-        this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
-        this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
-            this.html += "<br>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view info\" value=\"Information\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
-            if(L2HelperBuffer == true) {
+        if(Html.containsKey("getDefault"))
+        {
+            this.html = Html.get("getDefault");
+        }
+        else
+        {
+            this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view info\" value=\"Information\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+                if(L2HelperBuffer == true) {
+                    this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        if(L2HelperBufferBuffs == true || L2HelperBufferDS == true || L2HelperBufferSpecial == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer\" value=\"Buffer\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        if(L2HelperBufferRecharge == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view recharge\" value=\"Recharge\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                }
+                this.html += "<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>For Premium User";
+                if(this.activeChar.getSponsor() == 0) {
+                    this.html += " : You not Premium user.";
+                }
+                if(L2HelperLevelUp == true || L2HelperLevelDown == true || L2HelperVitaltity == true || L2HelperRecommend == true) {
+                this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                    if(L2HelperLevelUp == true || L2HelperLevelDown == true) {
+                        this.html += "<tr>";
+                        if(L2HelperLevelUp == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view level\" value=\"Level +1\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        if(L2HelperLevelDown == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view delevel\" value=\"Delevel -1\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        this.html += "</tr>";
+                    }
+                    if(L2HelperVitaltity == true || L2HelperRecommend == true) {
+                        this.html += "<tr>";
+                        if(L2HelperVitaltity == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view vitality\" value=\"Vitality\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        if(L2HelperRecommend == true) {
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view rec\" value=\"Recommend\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td></td>";
+                        }
+                        this.html += "</tr>";
+                    }
+                this.html += "</table>";
+                }
+                if(L2HelperEnchant == true) {
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view ench\" value=\"Enchant\" width=260 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                }
                 this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    if(L2HelperBufferBuffs == true || L2HelperBufferDS == true || L2HelperBufferSpecial == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer\" value=\"Buffer\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    if(L2HelperBufferRecharge == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view recharge\" value=\"Recharge\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    this.html += "</tr>";
-                this.html += "</table>";
-            }
-            this.html += "<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>For Premium User";
-            if(this.activeChar.getSponsor() == 0) {
-                this.html += " : You not Premium user.";
-            }
-            if(L2HelperLevelUp == true || L2HelperLevelDown == true || L2HelperVitaltity == true || L2HelperRecommend == true) {
-            this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                if(L2HelperLevelUp == true || L2HelperLevelDown == true) {
-                    this.html += "<tr>";
-                    if(L2HelperLevelUp == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view level\" value=\"Level +1\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    if(L2HelperLevelDown == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view delevel\" value=\"Delevel -1\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    this.html += "</tr>";
-                }
-                if(L2HelperVitaltity == true || L2HelperRecommend == true) {
-                    this.html += "<tr>";
-                    if(L2HelperVitaltity == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view vitality\" value=\"Vitality\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    if(L2HelperRecommend == true) {
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view rec\" value=\"Recommend\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    } else {
-                        this.html += "<td></td>";
-                    }
-                    this.html += "</tr>";
-                }
-            this.html += "</table>";
-            }
-            if(L2HelperEnchant == true) {
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view ench\" value=\"Enchant\" width=260 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
-            }
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-        this.html += "</td></tr></table>";
-        this.html += "</body></html>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+
+            Html.put("getDefault", this.html);
+        }
     }
     private void getInfo()
     {
@@ -712,106 +721,124 @@ public class Helper implements IVoicedCommandHandler {
     {
         if(L2HelperEnchant == true)
         {
-            String type = "";
-
-            if(L2HelperEnchantWeapon == true) {
-                type += "Weapon";
+            if(Html.containsKey("getEnchant"))
+            {
+                this.html = Html.get("getEnchant");
             }
+            else
+            {
+                String type = "";
 
-            if(L2HelperEnchantArmor == true) {
                 if(L2HelperEnchantWeapon == true) {
-                    type += ";";
+                    type += "Weapon";
                 }
-                type += "Helmet;Chest;Leggings;Gloves;Boots;Shield";
-            }
 
-            if(L2HelperEnchantJewels == true) {
-                if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true) {
-                    type += ";";
+                if(L2HelperEnchantArmor == true) {
+                    if(L2HelperEnchantWeapon == true) {
+                        type += ";";
+                    }
+                    type += "Helmet;Chest;Leggings;Gloves;Boots;Shield";
                 }
-                type += "Necklace;UpperEarring;LowerEarring;UpperRing;LowerRing";
-            }
 
-            if(L2HelperEnchantOther == true) {
-                if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true || L2HelperEnchantJewels == true) {
-                    type += ";";
+                if(L2HelperEnchantJewels == true) {
+                    if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true) {
+                        type += ";";
+                    }
+                    type += "Necklace;UpperEarring;LowerEarring;UpperRing;LowerRing";
                 }
-                type += "Cloak;Shirt;Belt";
-            }
 
-            this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr><td width=256 height=80 background=\"L2UI_CT1.OlympiadWnd_DF_GrandTexture\"></td></tr>";
-                this.html += "</table>";
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><combobox width=140 var=enchbox list="+type+"></td>";
-                    this.html += "</tr>";
-                    this.html += "<tr>";
-                    this.html += "<td><br><br><br></td>";
-                    this.html += "</tr>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view ench $enchbox\" value=\"Add Enchant\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                    this.html += "</tr>";
-                this.html += "</table>";
-                this.html += "<br><br><br><br><br><br><br><br><br><br><br>";
-                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
-            this.html += "</td></tr></table>";
-            this.html += "</body></html>";
+                if(L2HelperEnchantOther == true) {
+                    if(L2HelperEnchantWeapon == true || L2HelperEnchantArmor == true || L2HelperEnchantJewels == true) {
+                        type += ";";
+                    }
+                    type += "Cloak;Shirt;Belt";
+                }
+
+                this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr><td width=256 height=80 background=\"L2UI_CT1.OlympiadWnd_DF_GrandTexture\"></td></tr>";
+                    this.html += "</table>";
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><combobox width=140 var=enchbox list="+type+"></td>";
+                        this.html += "</tr>";
+                        this.html += "<tr>";
+                        this.html += "<td><br><br><br></td>";
+                        this.html += "</tr>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view ench $enchbox\" value=\"Add Enchant\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                    this.html += "<br><br><br><br><br><br><br><br><br><br><br>";
+                    this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                this.html += "</td></tr></table>";
+                this.html += "</body></html>";
+
+                Html.put("getEnchant", this.html);
+            }
         }
     }
     private void getBuffer()
     {
         if(L2HelperBuffer == true)
         {
-            this.html = "<html><body><title>Lineage II Helper</title>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
-                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-                if(L2HelperBufferBuffs == true) {
+            if(Html.containsKey("getBuffer"))
+            {
+                this.html = Html.get("getBuffer");
+            }
+            else
+            {
+                this.html = "<html><body><title>Lineage II Helper</title>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+                    this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                    if(L2HelperBufferBuffs == true) {
+                        this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                            this.html += "<tr>";
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        this.html += "</table>";
+                    }
+                    if(L2HelperBufferDS == true) {
+                        this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                            this.html += "<tr>";
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        this.html += "</table>";
+                    }
+                    if(L2HelperBufferSpecial == true) {
+                        this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                            this.html += "<tr>";
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        this.html += "</table>";
+                    }
+                    if(L2HelperBufferRecharge == true) {
+                        this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                            this.html += "<tr>";
+                            this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        this.html += "</table>";
+                    }
+
+                    this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
                     this.html += "<table border=0 cellpadding=0 cellspacing=0>";
                         this.html += "<tr>";
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                         this.html += "</tr>";
-                    this.html += "</table>";
-                }
-                if(L2HelperBufferDS == true) {
-                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                        this.html += "<tr>";
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                        this.html += "</tr>";
-                    this.html += "</table>";
-                }
-                if(L2HelperBufferSpecial == true) {
-                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                        this.html += "<tr>";
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                        this.html += "</tr>";
-                    this.html += "</table>";
-                }
-                if(L2HelperBufferRecharge == true) {
-                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                        this.html += "<tr>";
-                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                        this.html += "</tr>";
-                    this.html += "</table>";
-                }
+                    this.html += "</table><br><br><br>";
+                this.html += "</td></tr></table>";
+                this.html += "</body></html>";
 
-                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table><br><br><br>";
-            this.html += "</td></tr></table>";
-            this.html += "</body></html>";
+                Html.put("getBuffer", this.html);
+            }
         }
     }
     private void getBufferBuffs(String page)
