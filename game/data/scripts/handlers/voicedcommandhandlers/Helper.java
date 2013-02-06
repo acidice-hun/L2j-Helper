@@ -846,6 +846,20 @@ public class Helper implements IVoicedCommandHandler {
                 this.html = "<html><body><title>Lineage II Helper</title>";
                 this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
                     this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0><tr>";
+                    if(pg == 0) {
+                        this.html += "<td></td>";
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-1\" value=\"Next\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else if(pg == 1) {
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-0\" value=\"Preview\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-2\" value=\"Next\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else if(pg == 2) {
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-1\" value=\"Preview\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td></td>";
+                    }
+                    this.html += "</tr></table><br>";
+
                     this.html += "<table border=0 cellpadding=0 cellspacing=0>";
                     Integer i = 0;
                     for (Iterator<Integer> it = SkillBuffs.keySet().iterator(); it.hasNext();) {
