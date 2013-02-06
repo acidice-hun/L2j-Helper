@@ -21,6 +21,7 @@ import com.l2jserver.Config;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
+//import com.l2jserver.gameserver.datatables.SkillTreesData;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
 import com.l2jserver.gameserver.model.L2Macro;
 import com.l2jserver.gameserver.model.L2Macro.L2MacroCmd;
@@ -106,6 +107,12 @@ public class Helper implements IVoicedCommandHandler {
     private static String  L2HelperNewbieSetTitle;
     private static String  L2HelperNewbieSetNameColor;
     private static String  L2HelperNewbieSetTitleColor;
+
+    private static boolean L2HelperBuffer;
+    private static boolean L2HelperBufferRecharge;
+    private static boolean L2HelperBufferBuffs;
+    private static boolean L2HelperBufferDS;
+    private static boolean L2HelperBufferSpecial;
 
 
     @Override
@@ -282,6 +289,20 @@ public class Helper implements IVoicedCommandHandler {
             L2HelperNewbieSetNameColor = L2HelperProperties.getProperty("L2HelperNewbieSetNameColor", "");
             L2HelperNewbieSetTitleColor = L2HelperProperties.getProperty("L2HelperNewbieSetTitleColor", "");
 
+            L2HelperBuffer = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBuffer", "True"));
+            L2HelperBufferRecharge = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferRecharge", "True"));
+            Consumable.put("L2HelperBufferItemsById", L2HelperProperties.getProperty("L2HelperBufferItemsById", "57"));
+            Consumable.put("L2HelperBufferItemPriceCount", L2HelperProperties.getProperty("L2HelperBufferItemPriceCount", "5000"));
+            L2HelperBufferBuffs = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferBuffs", "True"));
+            Consumable.put("L2HelperBufferItemsByIdBuffs", L2HelperProperties.getProperty("L2HelperBufferItemsByIdBuffs", "57"));
+            Consumable.put("L2HelperBufferItemPriceCountBuffs", L2HelperProperties.getProperty("L2HelperBufferItemPriceCountBuffs", "10000"));
+            L2HelperBufferDS = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferDS", "True"));
+            Consumable.put("L2HelperBufferItemsByIdDS", L2HelperProperties.getProperty("L2HelperBufferItemsByIdDS", "5575"));
+            Consumable.put("L2HelperBufferItemPriceCountDS", L2HelperProperties.getProperty("L2HelperBufferItemPriceCountDS", "5000"));
+            L2HelperBufferSpecial = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferSpecial", "True"));
+            Consumable.put("L2HelperBufferItemsByIdSpecial", L2HelperProperties.getProperty("L2HelperBufferItemsByIdSpecial", "5575"));
+            Consumable.put("L2HelperBufferItemPriceCountSpecial", L2HelperProperties.getProperty("L2HelperBufferItemPriceCountSpecial", "5000"));
+
             this.getPropertiesRate();
 
             this.getPropertiesCache();
@@ -297,9 +318,10 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getPropertiesRate()
     {
-        if(L2HelperPrice != false) {
+        if(L2HelperPrice == true) {
 
             Double Count;
+            Long   Save;
 
             if(L2HelperServer != 0)
             {
@@ -323,7 +345,10 @@ public class Helper implements IVoicedCommandHandler {
                 } else {
                     Count = (Count / L2HelperPriceRate);
                 }
-                Consumable.put("L2HelperLevelUpItemCount", Double.toString(Count));
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperLevelUpItemCount", Long.toString(Save));
+                }
 
                 // Delevel
                 Count = Double.parseDouble(Consumable.get("L2HelperLevelDownItemCount"));
@@ -332,7 +357,10 @@ public class Helper implements IVoicedCommandHandler {
                 } else {
                     Count = (Count / L2HelperPriceRate);
                 }
-                Consumable.put("L2HelperLevelDownItemCount", Double.toString(Count));
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperLevelDownItemCount", Long.toString(Save));
+                }
 
                 // Vitatlity
                 Count = Double.parseDouble(Consumable.get("L2HelperVitalityItemCount"));
@@ -341,7 +369,10 @@ public class Helper implements IVoicedCommandHandler {
                 } else {
                     Count = (Count / L2HelperPriceRate);
                 }
-                Consumable.put("L2HelperVitalityItemCount", Double.toString(Count));
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperVitalityItemCount", Long.toString(Save));
+                }
 
                 // Recommend
                 Count = Double.parseDouble(Consumable.get("L2HelperRecommendItemCount"));
@@ -350,16 +381,21 @@ public class Helper implements IVoicedCommandHandler {
                 } else {
                     Count = (Count / L2HelperPriceRate);
                 }
-                Consumable.put("L2HelperRecommendItemCount", Double.toString(Count));
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperRecommendItemCount", Long.toString(Save));
+                }
 
-                // Recommend
+                // Newbie Support Adena
                 Count = Double.parseDouble(Long.toString(L2HelperNewbieSupportAdena));
                 if(L2HelperPriceRate > 1.0) {
                     Count = (Count * L2HelperPriceRate);
                 } else {
                     Count = (Count / L2HelperPriceRate);
                 }
-                L2HelperNewbieSupportAdena = Long.parseLong(Double.toString(Count));
+                if(Count > 1) {
+                    L2HelperNewbieSupportAdena = (long)Math.abs(Count);
+                }
             }
         }
     }
@@ -388,20 +424,20 @@ public class Helper implements IVoicedCommandHandler {
         SkillSongs.put(764, new String[] {"1","title","Increases a party members tolerance to bows by 30.","icon.skill0764"});
 
         /* Dances */
-        SkillDances.put(271, new String[] {"1","title","Increases the P. Atk. of all party members by 12%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0271"});
-        SkillDances.put(272, new String[] {"1","title","Increases the accuracy of all party members by 4. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0272"});
-        SkillDances.put(273, new String[] {"1","title","Increases the M. Atk. of all party members by 20%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0273"});
-        SkillDances.put(274, new String[] {"1","title","Increases the critical attack power of all party members by 35%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0274"});
-        SkillDances.put(275, new String[] {"1","title","Increases the Atk. Spd. of all party members by 15%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0275"});
-        SkillDances.put(276, new String[] {"1","title","Decreases the magic-canceling damage of all party members by 40 and increases Casting Spd. by 30%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0276"});
-        SkillDances.put(277, new String[] {"1","title","Increases the divine attribute P. Atk. of all party members by 20. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0277"});
-        SkillDances.put(307, new String[] {"1","title","Increases party members resistance to water attacks by 30. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0307"});
-        SkillDances.put(309, new String[] {"1","title","Increases party members resistance to earth attacks by 30. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0309"});
-        SkillDances.put(310, new String[] {"1","title","Gives all party members the ability to recover as HP 8% of any standard short-range physical damage inflicted on the enemy. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0310"});
-        SkillDances.put(311, new String[] {"1","title","Gives all party members the ability to decrease by 30 any environment-related damage received. Increases MP consumption when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0311"});
-        SkillDances.put(365, new String[] {"1","title","Increases all party members damage magic critical attack rate by 100%. Also increases MP consumption when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0365"});
-        SkillDances.put(366, new String[] {"1","title","Decreases all party members movement speed by 50% and prevents them from being pre-emptively attacked by monsters. Also increases MP consumption when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0366"});
-        SkillDances.put(530, new String[] {"1","title","Increases all party members resistance to divine or Dark attacks by 30. Also increases MP consumption when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0530"});
+        SkillDances.put(271, new String[] {"1","title","Increases the P. Atk. of all party members by 12%.","icon.skill0271"});
+        SkillDances.put(272, new String[] {"1","title","Increases the accuracy of all party members by 4.","icon.skill0272"});
+        SkillDances.put(273, new String[] {"1","title","Increases the M. Atk. of all party members by 20%.","icon.skill0273"});
+        SkillDances.put(274, new String[] {"1","title","Increases the critical attack power of all party members by 35%.","icon.skill0274"});
+        SkillDances.put(275, new String[] {"1","title","Increases the Atk. Spd. of all party members by 15%.","icon.skill0275"});
+        SkillDances.put(276, new String[] {"1","title","Decreases the magic-canceling damage of all party members by 40 and increases Casting Spd. by 30%.","icon.skill0276"});
+        SkillDances.put(277, new String[] {"1","title","Increases the divine attribute P. Atk. of all party members by 20.","icon.skill0277"});
+        SkillDances.put(307, new String[] {"1","title","Increases party members resistance to water attacks by 30.","icon.skill0307"});
+        SkillDances.put(309, new String[] {"1","title","Increases party members resistance to earth attacks by 30.","icon.skill0309"});
+        SkillDances.put(310, new String[] {"1","title","Gives all party members the ability to recover as HP 8% of any standard short-range physical damage inflicted on the enemy.","icon.skill0310"});
+        SkillDances.put(311, new String[] {"1","title","Gives all party members the ability to decrease by 30 any environment-related damage received.","icon.skill0311"});
+        SkillDances.put(365, new String[] {"1","title","Increases all party members damage magic critical attack rate by 100%.","icon.skill0365"});
+        SkillDances.put(366, new String[] {"1","title","Decreases all party members movement speed by 50% and prevents them from being pre-emptively attacked by monsters.","icon.skill0366"});
+        SkillDances.put(530, new String[] {"1","title","Increases all party members resistance to divine or Dark attacks by 30.","icon.skill0530"});
         SkillDances.put(915, new String[] {"1","title","Decreases a party members P. Def., M. Def. and evasion, and increases their P. Atk., M. Atk., Atk. Spd., Casting Spd. and movement speed.","icon.skill0915"});
 
         /* Buffs */
@@ -1246,27 +1282,28 @@ public class Helper implements IVoicedCommandHandler {
         {
             Integer id = Integer.parseInt(Skill);
             String[] skill;
+            //SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
 
             switch(Type)
             {
                 case 1: // Get Buff
                     skill = SkillBuffs.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferBuffs();
                     break;
                 case 2: // Get Songs
                     skill = SkillSongs.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferSongs();
                     break;
                 case 3: // Get Dances
                     skill = SkillDances.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferDances();
                     break;
                 case 4: // Get Special
                     skill = SkillSpecial.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferSpecial();
                     break;
             }
@@ -1284,11 +1321,11 @@ public class Helper implements IVoicedCommandHandler {
                 this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
                 this.activeChar.sendPacket(new UserInfo(this.activeChar));
                 this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
-                this.activeChar.sendMessage(" adena decreased and set max HP MP CP");
+                this.activeChar.sendMessage("Set max HP MP CP");
             }
             else
             {
-                this.activeChar.sendMessage("Require  adena.");
+                this.activeChar.sendMessage("Require adena.");
             }
         }
         catch (Exception e)
