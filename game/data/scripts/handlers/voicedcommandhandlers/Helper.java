@@ -775,13 +775,13 @@ public class Helper implements IVoicedCommandHandler {
             this.html = "<html><body><title>Lineage II Helper</title>";
             this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
                 this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-
+                if(L2HelperBufferBuffs == true) {
                 this.html += "<table border=0 cellpadding=0 cellspacing=0>";
                     this.html += "<tr>";
                     this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                     this.html += "</tr>";
                 this.html += "</table>";
-
+                }
                 this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
                     /*this.html += "<tr>";
                     this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c1\" value=\"Fighter\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
@@ -817,28 +817,37 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getBufferBuffs()
     {
-        this.html = "<html><body><title>Lineage II Helper</title>";
-        this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-            //Level,Name,Description,Icon
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                for (int i = 0; i < SkillBuffs.size(); i++) {
-                    String[] Skill = SkillBuffs.get(i);
+        if(Html.containsKey("getBufferBuffs"))
+        {
+            this.html = Html.get("getBufferBuffs");
+        }
+        else
+        {
+            this.html = "<html><body><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                for (Iterator<Integer> it = SkillBuffs.keySet().iterator(); it.hasNext();) {
+                    Integer key = it.next();
+                    String[] skill = SkillBuffs.get(key);
                     this.html += "<tr>";
-                    this.html += "<td width=\"40\" bgc><div align=\"left\"><font color=\"00ff00\"><img src="+Skill[3]+" width=32 height=32></font></div></td>";
-                    this.html += "<td width=\"84\"><div align=\"left\"><a action=\"bypass -h voice .helper view buffer h3\">"+Skill[1]+"</a></div></td>";
+                    this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                    this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                     this.html += "</tr>";
                 }
-            this.html += "</table>";
+                this.html += "</table>";
 
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
-        this.html += "</td></tr></table>";
-        this.html += "</body></html>";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+
+            Html.put("getBufferBuffs", this.html);
+        }
     }
     private void getBufferSongs()
     {
@@ -876,10 +885,71 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getBufferDances()
     {
+        if(Html.containsKey("getBufferDances"))
+        {
+            this.html = Html.get("getBufferDances");
+        }
+        else
+        {
+            this.html = "<html><body><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                for (Iterator<Integer> it = SkillDances.keySet().iterator(); it.hasNext();) {
+                    Integer key = it.next();
+                    String[] skill = SkillDances.get(key);
+                    this.html += "<tr>";
+                    this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                    this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                }
+                this.html += "</table>";
 
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+
+            Html.put("getBufferDances", this.html);
+        }
     }
     private void getBufferSpecial()
     {
+        if(Html.containsKey("getBufferSpecial"))
+        {
+            this.html = Html.get("getBufferSpecial");
+        }
+        else
+        {
+            this.html = "<html><body><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                for (Iterator<Integer> it = SkillSpecial.keySet().iterator(); it.hasNext();) {
+                    Integer key = it.next();
+                    String[] skill = SkillSpecial.get(key);
+                    this.html += "<tr>";
+                    this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                    this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                }
+                this.html += "</table>";
+
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+
+            Html.put("getBufferSpecial", this.html);
+        }
 
     }
 
