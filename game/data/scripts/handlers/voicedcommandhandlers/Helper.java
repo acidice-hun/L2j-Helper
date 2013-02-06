@@ -1,7 +1,7 @@
 package handlers.voicedcommandhandlers;
 /*
- * L2Helper HighFive
- * Copyright (C) 2013 Pater http://pater.perfect.sk
+ * L2j Helper HighFive
+ * Copyright (C) 2013 Milan Jankovec http://l2..perfect.sk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,10 +54,7 @@ import java.util.logging.Level;
 public class Helper implements IVoicedCommandHandler {
 
 
-    private static final String[] _voicedCommands = {
-        "helper"
-    };
-
+    private static final String[] _voicedCommands = {"helper"};
 
     private String  html;
     private String  param;
