@@ -776,34 +776,34 @@ public class Helper implements IVoicedCommandHandler {
             this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
                 this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
                 if(L2HelperBufferBuffs == true) {
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
                 }
-                this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                    /*this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c1\" value=\"Fighter\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c2\" value=\"Mages\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr><tr>";*/
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
-
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
-
-                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                    this.html += "<tr>";
-                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                    this.html += "</tr>";
-                this.html += "</table>";
+                if(L2HelperBufferDS == true) {
+                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                }
+                if(L2HelperBufferSpecial == true) {
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                }
+                if(L2HelperBufferRecharge == true) {
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                        this.html += "<tr>";
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "</tr>";
+                    this.html += "</table>";
+                }
 
                 this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
                 this.html += "<table border=0 cellpadding=0 cellspacing=0>";
