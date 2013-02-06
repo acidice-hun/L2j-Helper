@@ -36,7 +36,6 @@ import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.model.ShortCuts;
-import com.l2jserver.gameserver.model.skills.L2Skill;
 import com.l2jserver.gameserver.network.serverpackets.ShortCutRegister;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
@@ -109,6 +108,7 @@ public class Helper implements IVoicedCommandHandler {
     private static String  L2HelperNewbieSetTitleColor;
 
     private static boolean L2HelperBuffer;
+    private static boolean L2HelperBufferIcon;
     private static boolean L2HelperBufferRecharge;
     private static boolean L2HelperBufferBuffs;
     private static boolean L2HelperBufferDS;
@@ -290,6 +290,7 @@ public class Helper implements IVoicedCommandHandler {
             L2HelperNewbieSetTitleColor = L2HelperProperties.getProperty("L2HelperNewbieSetTitleColor", "");
 
             L2HelperBuffer = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBuffer", "True"));
+            L2HelperBufferIcon = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferIcon", "True"));
             L2HelperBufferRecharge = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperBufferRecharge", "True"));
             Consumable.put("L2HelperBufferItemsById", L2HelperProperties.getProperty("L2HelperBufferItemsById", "57"));
             Consumable.put("L2HelperBufferItemPriceCount", L2HelperProperties.getProperty("L2HelperBufferItemPriceCount", "5000"));
@@ -869,22 +870,34 @@ public class Helper implements IVoicedCommandHandler {
                             String[] skill = SkillBuffs.get(key);
                             String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                             this.html += "<tr>";
-                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            if(L2HelperBufferIcon == true) {
+                                this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                                this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            } else {
+                                this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            }
                             this.html += "</tr>";
                         } else if(pg == 1 && i >= 24 && i < 48) {
                             String[] skill = SkillBuffs.get(key);
                             String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                             this.html += "<tr>";
-                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            if(L2HelperBufferIcon == true) {
+                                this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                                this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            } else {
+                                this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            }
                             this.html += "</tr>";
                         } else if(pg == 2 && i >= 48 && i < 75) {
                             String[] skill = SkillBuffs.get(key);
                             String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                             this.html += "<tr>";
-                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            if(L2HelperBufferIcon == true) {
+                                this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                                this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            } else {
+                                this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            }
                             this.html += "</tr>";
                         }
                         i++;
@@ -936,8 +949,12 @@ public class Helper implements IVoicedCommandHandler {
                         String[] skill = SkillSongs.get(key);
                         String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                         this.html += "<tr>";
-                        this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        if(L2HelperBufferIcon == true) {
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        }
                         this.html += "</tr>";
                     }
                     this.html += "</table>";
@@ -974,8 +991,12 @@ public class Helper implements IVoicedCommandHandler {
                         String[] skill = SkillDances.get(key);
                         String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                         this.html += "<tr>";
-                        this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h3 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        if(L2HelperBufferIcon == true) {
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h3 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h3 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        }
                         this.html += "</tr>";
                     }
                     this.html += "</table>";
@@ -1012,8 +1033,12 @@ public class Helper implements IVoicedCommandHandler {
                         String[] skill = SkillSpecial.get(key);
                         String name = SkillTable.getInstance().getInfo(key, Integer.parseInt(skill[0])).getName();
                         this.html += "<tr>";
-                        this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h4 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        if(L2HelperBufferIcon == true) {
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h4 "+key+"\" value=\""+name+"\" width=200 height=42 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        } else {
+                            this.html += "<td align=\"left\" width=\"240\"><button action=\"bypass -h voice .helper view buffer h4 "+key+"\" value=\""+name+"\" width=220 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        }
                         this.html += "</tr>";
                     }
                     this.html += "</table>";
