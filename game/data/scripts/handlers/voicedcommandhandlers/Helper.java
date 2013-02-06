@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -66,6 +67,7 @@ public class Helper implements IVoicedCommandHandler {
     // Cache
     private static boolean Properties = false;
 
+    private static HashMap<String, String>    Html         = new HashMap<String, String>();
     private static HashMap<String, String>    Consumable   = new HashMap<String, String>();
     private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<Integer, String[]>();
     private static HashMap<Integer, String[]> SkillSongs   = new HashMap<Integer, String[]>();
@@ -92,7 +94,7 @@ public class Helper implements IVoicedCommandHandler {
     private static boolean L2HelperEnchantArmor;
     private static boolean L2HelperEnchantJewels;
     private static boolean L2HelperEnchantOther;
-    private static boolean L2HelperEnchantAttribute;
+    //private static boolean L2HelperEnchantAttribute;
 
     private static boolean L2HelperNewbie;
     private static Integer L2HelperNewbieStartLevel;
@@ -222,6 +224,7 @@ public class Helper implements IVoicedCommandHandler {
         try
         {
             L2Properties L2HelperProperties = new L2Properties();
+            //Config.DATAPACK_ROOT
             final File l2helper = new File("./config/L2Helper.properties");
 
             try (InputStream is = new FileInputStream(l2helper))
@@ -247,7 +250,7 @@ public class Helper implements IVoicedCommandHandler {
             Consumable.put("L2HelperLevelDownItemCount", L2HelperProperties.getProperty("L2HelperLevelDownItemCount", "10000"));
 
             L2HelperLevelUp = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperLevelDown", "True"));
-            Consumable.put("L2HelperLevelUpItem", L2HelperProperties.getProperty("L2HelperLevelUpItem", "57"));
+            Consumable.put("L2HelperLevelUpItem", L2HelperProperties.getProperty("L2HelperLevelUpItem", "5575"));
             Consumable.put("L2HelperLevelUpItemCount", L2HelperProperties.getProperty("L2HelperLevelUpItemCount", "1000000000"));
 
             L2HelperVitaltity = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperLevelDown", "True"));
@@ -266,7 +269,7 @@ public class Helper implements IVoicedCommandHandler {
             L2HelperEnchantArmor = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantArmor", "True"));
             L2HelperEnchantJewels = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantJewels", "True"));
             L2HelperEnchantOther = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantOther", "True"));
-            L2HelperEnchantAttribute = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantAttribute", "True"));
+            //L2HelperEnchantAttribute = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperEnchantAttribute", "True"));
 
             L2HelperNewbie = Boolean.parseBoolean(L2HelperProperties.getProperty("L2HelperNewbie", "True"));
             L2HelperNewbieStartLevel = Integer.parseInt(L2HelperProperties.getProperty("L2HelperNewbieStartLevel", "0"));
@@ -363,26 +366,26 @@ public class Helper implements IVoicedCommandHandler {
     private void getPropertiesCache()
     {
         /*
-         * [ID] = Level,Name,Description,Icon
+         * [ID] = Id,Level,Name,Description,Icon
          */
 
         /* Songs */
-        SkillSongs.put(264, new String[] {"1","title","Increases the P. Def. of all party members by 25%. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0264"});
-        SkillSongs.put(265, new String[] {"1","title","Increases HP Regeneration of all party members by 20%. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0265"});
-        SkillSongs.put(266, new String[] {"1","title","Increases the evasion of all party members by 3. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0266"});
-        SkillSongs.put(267, new String[] {"1","title","Increases the M. Def. of all party members by 30%. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0267"});
-        SkillSongs.put(268, new String[] {"1","title","Increases the movement speed of all party members by 20. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0268"});
-        SkillSongs.put(269, new String[] {"1","title","Increases the critical attack rate of all party members by 100%. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0269"});
-        SkillSongs.put(270, new String[] {"1","title","Increases the resistance of all party members to Dark attacks by 20. MP consumption is increased when singing while song&amp;dance effect lasts.","icon.skill0270"});
-        SkillSongs.put(304, new String[] {"1","title","Increases Max HP of all party members by 30%. Also increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0304"});
-        SkillSongs.put(305, new String[] {"1","title","Gives a party member the ability to transfer 20% of received standard short-range damage back to the enemy. Also increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0305"});
-        SkillSongs.put(306, new String[] {"1","title","Increases party members resistance to fire attacks by 30. Increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0306"});
-        SkillSongs.put(308, new String[] {"1","title","Increases party members resistance to wind attacks by 30. Increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0308"});
-        SkillSongs.put(349, new String[] {"1","title","Decreases all party members physical&amp;magic skill MP consumption by 5% and re-use time by 20%. Also increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0349"});
-        SkillSongs.put(363, new String[] {"1","title","Increases all party members MP recovery bonus by 20%, and decreases magic skill use MP consumption by 10%. Also increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0363"});
-        SkillSongs.put(364, new String[] {"1","title","Decreases all party members physical skill use and song&amp;dance skill use MP consumption by 20% and physical skill and song&amp;dance skill reuse time by 10%. Increases the additional MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0364"});
-        SkillSongs.put(529, new String[] {"1","title","Increases all party members resistance to fire, water, wind and earth attacks by 30. Also increases MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0529"});
-        SkillSongs.put(764, new String[] {"1","title","Increases a party members tolerance to bows by 30. Increases the additional MP consumption when singing while sing&amp;dance effect lasts.","icon.skill0764"});
+        SkillSongs.put(264, new String[] {"1","title","Increases the P. Def. of all party members by 25%.","icon.skill0264"});
+        SkillSongs.put(265, new String[] {"1","title","Increases HP Regeneration of all party members by 20%.","icon.skill0265"});
+        SkillSongs.put(266, new String[] {"1","title","Increases the evasion of all party members by 3.","icon.skill0266"});
+        SkillSongs.put(267, new String[] {"1","title","Increases the M. Def. of all party members by 30%.","icon.skill0267"});
+        SkillSongs.put(268, new String[] {"1","title","Increases the movement speed of all party members by 20.","icon.skill0268"});
+        SkillSongs.put(269, new String[] {"1","title","Increases the critical attack rate of all party members by 100%.","icon.skill0269"});
+        SkillSongs.put(270, new String[] {"1","title","Increases the resistance of all party members to Dark attacks by 20.","icon.skill0270"});
+        SkillSongs.put(304, new String[] {"1","title","Increases Max HP of all party members by 30%.","icon.skill0304"});
+        SkillSongs.put(305, new String[] {"1","title","Gives a party member the ability to transfer 20% of received standard short-range damage back to the enemy.","icon.skill0305"});
+        SkillSongs.put(306, new String[] {"1","title","Increases party members resistance to fire attacks by 30.","icon.skill0306"});
+        SkillSongs.put(308, new String[] {"1","title","Increases party members resistance to wind attacks by 30.","icon.skill0308"});
+        SkillSongs.put(349, new String[] {"1","title","Decreases all party members physical&amp;magic skill MP consumption by 5% and re-use time by 20%.","icon.skill0349"});
+        SkillSongs.put(363, new String[] {"1","title","Increases all party members MP recovery bonus by 20%, and decreases magic skill use MP consumption by 10%.","icon.skill0363"});
+        SkillSongs.put(364, new String[] {"1","title","Decreases all party members physical skill use and song&amp;dance skill use MP consumption by 20% and physical skill and song&amp;dance skill reuse time by 10%.","icon.skill0364"});
+        SkillSongs.put(529, new String[] {"1","title","Increases all party members resistance to fire, water, wind and earth attacks by 30.","icon.skill0529"});
+        SkillSongs.put(764, new String[] {"1","title","Increases a party members tolerance to bows by 30.","icon.skill0764"});
 
         /* Dances */
         SkillDances.put(271, new String[] {"1","title","Increases the P. Atk. of all party members by 12%. MP consumption is increased when dancing while song&dance effect lasts. Requires a dualsword weapon.","icon.skill0271"});
@@ -674,20 +677,30 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getBuffer()
     {
-        this.html = "<html><body scroll=\"no\"><title>Lineage II Helper</title>";
+        this.html = "<html><body><title>Lineage II Helper</title>";
         this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
             this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
 
-            this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
                 this.html += "<tr>";
+                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                this.html += "</tr>";
+            this.html += "</table>";
+
+            this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                /*this.html += "<tr>";
                 this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c1\" value=\"Fighter\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                 this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c2\" value=\"Mages\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr><tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr><tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Buffs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "<td></td>";
+                this.html += "</tr><tr>";*/
+                this.html += "<tr>";
+                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                this.html += "</tr>";
+            this.html += "</table>";
+
+            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                this.html += "<tr>";
+                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                 this.html += "</tr>";
             this.html += "</table>";
 
@@ -708,18 +721,62 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getBufferBuffs()
     {
-        /*
-        html += "<tr>";
-        html += "<td width=\"40\" bgc><div align=\"left\"><font color=\"00ff00\"><img src=icon.skill0271 width=32 height=32></font></div></td>";
-        html += "<td width=\"84\"><div align=\"left\"><a action=\"bypass -h Quest 9999_NPCBuffer 26\">Dan Warrior</a></div></td>";
-        html += "<td width=\"33\" bgc><div align=\"left\"><font color=\"00ff00\"><img src=icon.skill0275 width=32 height=32></font></div></td>";
-        html += "<td width=\"85\"><a action=\"bypass -h Quest 9999_NPCBuffer 30\">Dance Fury</a></td>";
-        html += "</tr>";
-        */
+        this.html = "<html><body><title>Lineage II Helper</title>";
+        this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+            //Level,Name,Description,Icon
+            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                for (int i = 0; i < SkillBuffs.size(); i++) {
+                    String[] Skill = SkillBuffs.get(i);
+                    this.html += "<tr>";
+                    this.html += "<td width=\"40\" bgc><div align=\"left\"><font color=\"00ff00\"><img src="+Skill[3]+" width=32 height=32></font></div></td>";
+                    this.html += "<td width=\"84\"><div align=\"left\"><a action=\"bypass -h voice .helper view buffer h3\">"+Skill[1]+"</a></div></td>";
+                    this.html += "</tr>";
+                }
+            this.html += "</table>";
+
+            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                this.html += "<tr>";
+                this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                this.html += "</tr>";
+            this.html += "</table>";
+        this.html += "</td></tr></table>";
+        this.html += "</body></html>";
     }
     private void getBufferSongs()
     {
+        if(Html.containsKey("getBufferSongs"))
+        {
+            this.html = Html.get("getBufferSongs");
+        }
+        else
+        {
+            this.html = "<html><body><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                for (Iterator<Integer> it = SkillSongs.keySet().iterator(); it.hasNext();) {
+                    Integer key = it.next();
+                    String[] skill = SkillSongs.get(key);
+                    this.html += "<tr>";
+                    this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                    this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                }
+                this.html += "</table>";
 
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+
+            Html.put("getBufferSongs", this.html);
+        }
     }
     private void getBufferDances()
     {
@@ -1143,10 +1200,10 @@ public class Helper implements IVoicedCommandHandler {
                 {
                     this.Buff(prm[i], null);
                 }
-                /*if(i == 3)
+                if(i == 3)
                 {
                     this.Buff(prm[2], prm[i]);
-                }*/
+                }
             }
         }
     }
@@ -1197,6 +1254,21 @@ public class Helper implements IVoicedCommandHandler {
                     SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
                     this.getBufferBuffs();
                     break;
+                case 2: // Get Songs
+                    skill = SkillSongs.get(id);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    this.getBufferSongs();
+                    break;
+                case 3: // Get Dances
+                    skill = SkillDances.get(id);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    this.getBufferDances();
+                    break;
+                case 4: // Get Special
+                    skill = SkillSpecial.get(id);
+                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar,this.activeChar);
+                    this.getBufferSpecial();
+                    break;
             }
         }
 
@@ -1221,7 +1293,6 @@ public class Helper implements IVoicedCommandHandler {
         }
         catch (Exception e)
         {
-            this.activeChar.sendMessage("A problem occured! Contacting to server administrator.");
             _log.log(Level.WARNING, "", e);
         }
     }
