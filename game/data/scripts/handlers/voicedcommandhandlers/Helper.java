@@ -580,8 +580,8 @@ public class Helper implements IVoicedCommandHandler {
         SkillSpecial.put(1357, new String[] {"315","title","For 5 minutes, a powerful spirit acts to increase a party member's Max HP by 20%, Critical Rate by 20%, magic damage by 20%, P. Atk. by 10%, P. Def. by 20%, Atk. Spd. by 20%, M. Atk. by 20%, M. Def. by 20%, Casting Spd. by 20%, and Resistance to de-buff by 10%. Bestows the ability to recover as HP 5% of standard melee damage inflicted on the enemy. Consumes 10 Spirit Ore. Enchant Decrease Penalty: Eases the skill's restrictions.","icon.skill1357"});
         SkillSpecial.put(1363, new String[] {"315","title","Movement speed consumption penalty decreases by 1%.<br1>Restores 20% of all party members HP. A powerful spirit acts to increase a party members Max HP by 20%, damage magic critical attack power by 2, critical attack power by 20%, P. Atk. by 10%, P. Def. by 20%, Atk. Spd. by 20%, M. Atk. by 20%, M. Def. by 20%, Casting Spd. by 20%, resistance to de-buffs by 10%, and accuracy by 4. Consumes 40 Spirit Ores. Enchant Decrease Penalty: Movement speed consumption penalty decreases.","icon.skill1363"});
         SkillSpecial.put(1374, new String[] {"1","title","For 2 minutes, increases nearby clan members' P. Atk. by 250, P. Def. by 500, and Resistance to buff-canceling attacks by 40. Consumes 80 Spirit Ore.","icon.skill1374"});
-        SkillSpecial.put(1392, new String[] {"130","Increases divine resistance by 4.<br1>Increases resistance to divine attacks by 110. Enchant Power: Increases divine resistance.","icon.skill1392"});
-        SkillSpecial.put(1393, new String[] {"130","Increases Dark resistance by 4.<br1>Increases resistance to Dark attacks by 110. Enchant Power: Power of the skill is increased.","icon.skill1393"});
+        SkillSpecial.put(1392, new String[] {"130","title","Increases divine resistance by 4.<br1>Increases resistance to divine attacks by 110. Enchant Power: Increases divine resistance.","icon.skill1392"});
+        SkillSpecial.put(1393, new String[] {"130","title","Increases Dark resistance by 4.<br1>Increases resistance to Dark attacks by 110. Enchant Power: Power of the skill is increased.","icon.skill1393"});
         SkillSpecial.put(1397, new String[] {"230","title","For 20 minutes, decreases physical skill MP consumption by 20%, magic skill MP consumption by 15%, and song/dance skill MP consumption by 20%. Consumes 3 Spirit Ore. Enchant Power: Decreases MP consumption for magical skills.","icon.skill1397"});
         SkillSpecial.put(1414, new String[] {"315","title","For 5 minutes, a powerful spirit acts to increase nearby clan members' Max CP by 20%, CP recovery bonus by 20%, Max MP by 20%, Critical Rate by 20%, magic damage by 20%, P. Atk. by 10%, P. Def. by 20%, Atk. Spd. by 20%, M. Atk. by 20%, M. Def. by 20%, Casting Spd. by 20%, and Resistance to de-buffs by 10%. Consumes 40 Spirit Ore. Enchant Decrease Penalty: Eases the skill's restrictions.","icon.skill1414"});
         SkillSpecial.put(1416, new String[] {"115","title","Regenerates nearby clan members' CP by 950 and increases Max CP by 950 for 5 minutes. Consumes 20 Spirit Ore. Enchant Power: Increases Max CP.","icon.skill1416"});
@@ -791,14 +791,14 @@ public class Helper implements IVoicedCommandHandler {
                     this.html += "</table>";
                 }
                 if(L2HelperBufferSpecial == true) {
-                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
                         this.html += "<tr>";
                         this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                         this.html += "</tr>";
                     this.html += "</table>";
                 }
                 if(L2HelperBufferRecharge == true) {
-                    this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
                         this.html += "<tr>";
                         this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                         this.html += "</tr>";
@@ -815,13 +815,31 @@ public class Helper implements IVoicedCommandHandler {
             this.html += "</body></html>";
         }
     }
-    private void getBufferBuffs()
+    private void getBufferBuffs(String page)
     {
         if(L2HelperBufferBuffs == true)
         {
-            if(Html.containsKey("getBufferBuffs"))
+            String cahce = "getBufferBuffs";
+            Integer pg   = 0;
+
+            switch(page) {
+                case "h1":
+                case "h1-0":
+                    cahce += "-0";
+                    break;
+                case "h1-1":
+                    cahce += "-1";
+                    pg = 1;
+                    break;
+                case "h1-2":
+                    cahce += "-2";
+                    pg = 2;
+                    break;
+            }
+
+            if(Html.containsKey(cahce))
             {
-                this.html = Html.get("getBufferBuffs");
+                this.html = Html.get(cahce);
             }
             else
             {
@@ -829,15 +847,44 @@ public class Helper implements IVoicedCommandHandler {
                 this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358><tr><td valign=\"top\" align=\"center\">";
                     this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
                     this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    Integer i = 0;
                     for (Iterator<Integer> it = SkillBuffs.keySet().iterator(); it.hasNext();) {
                         Integer key = it.next();
-                        String[] skill = SkillBuffs.get(key);
-                        this.html += "<tr>";
-                        this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                        this.html += "</tr>";
+                        if(pg == 0 && i >= 0 && i < 24) {
+                            String[] skill = SkillBuffs.get(key);
+                            this.html += "<tr>";
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        } else if(pg == 1 && i >= 24 && i < 48) {
+                            String[] skill = SkillBuffs.get(key);
+                            this.html += "<tr>";
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        } else if(pg == 2 && i >= 48 && i < 75) {
+                            String[] skill = SkillBuffs.get(key);
+                            this.html += "<tr>";
+                            this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
+                            this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h1 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                            this.html += "</tr>";
+                        }
+                        i++;
                     }
-                    this.html += "</table>";
+                    this.html += "</table><br>";
+
+                    this.html += "<table border=0 cellpadding=0 cellspacing=0><tr>";
+                    if(pg == 0) {
+                        this.html += "<td></td>";
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-1\" value=\"Next\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else if(pg == 1) {
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-0\" value=\"Preview\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-2\" value=\"Next\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else if(pg == 2) {
+                        this.html += "<td align=\"right\" width=\"100\"><button action=\"bypass -h voice .helper view buffer h1-1\" value=\"Preview\" width=80 height=22 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td></td>";
+                    }
+                    this.html += "</tr></table>";
 
                     this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
                     this.html += "<table border=0 cellpadding=0 cellspacing=0>";
@@ -848,7 +895,7 @@ public class Helper implements IVoicedCommandHandler {
                 this.html += "</td></tr></table>";
                 this.html += "</body></html>";
 
-                Html.put("getBufferBuffs", this.html);
+                Html.put(cahce, this.html);
             }
         }
     }
@@ -908,7 +955,7 @@ public class Helper implements IVoicedCommandHandler {
                         String[] skill = SkillDances.get(key);
                         this.html += "<tr>";
                         this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h3 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                         this.html += "</tr>";
                     }
                     this.html += "</table>";
@@ -945,7 +992,7 @@ public class Helper implements IVoicedCommandHandler {
                         String[] skill = SkillSpecial.get(key);
                         this.html += "<tr>";
                         this.html += "<td align=\"left\" width=\"40\"><img src="+skill[3]+" width=32 height=32></td>";
-                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h2 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                        this.html += "<td align=\"left\" width=\"200\"><button action=\"bypass -h voice .helper view buffer h4 "+key+"\" value=\""+skill[1]+"\" width=160 height=40 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                         this.html += "</tr>";
                     }
                     this.html += "</table>";
@@ -1394,10 +1441,13 @@ public class Helper implements IVoicedCommandHandler {
             switch(ID)
             {
                 case "h1": // HTML Buffs
+                case "h1-0": // HTML Buffs
+                case "h1-1": // HTML Buffs
+                case "h1-2": // HTML Buffs
                     if(L2HelperBufferBuffs == true)
                     {
                         this.BuffGet(1, Skill);
-                        this.getBufferBuffs();
+                        this.getBufferBuffs(ID);
                     }
                     break;
 
@@ -1452,25 +1502,24 @@ public class Helper implements IVoicedCommandHandler {
                         skill = SkillBuffs.get(id);
                         item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdBuffs"));
                         count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountBuffs"));
-                        this.getBufferBuffs();
                         break;
+
                     case 2: // Get Songs
                         skill = SkillSongs.get(id);
                         item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdDS"));
                         count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountDS"));
-                        this.getBufferSongs();
                         break;
+
                     case 3: // Get Dances
                         skill = SkillDances.get(id);
                         item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdDS"));
                         count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountDS"));
-                        this.getBufferDances();
                         break;
+
                     case 4: // Get Special
                         skill = SkillSpecial.get(id);
                         item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdSpecial"));
                         count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountSpecial"));
-                        this.getBufferSpecial();
                         break;
                 }
 
