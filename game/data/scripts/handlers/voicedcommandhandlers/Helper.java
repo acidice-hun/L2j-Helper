@@ -21,7 +21,6 @@ import com.l2jserver.Config;
 import com.l2jserver.gameserver.cache.HtmCache;
 import com.l2jserver.gameserver.datatables.ExperienceTable;
 import com.l2jserver.gameserver.datatables.SkillTable;
-//import com.l2jserver.gameserver.datatables.SkillTreesData;
 import com.l2jserver.gameserver.handler.IVoicedCommandHandler;
 import com.l2jserver.gameserver.model.L2Macro;
 import com.l2jserver.gameserver.model.L2Macro.L2MacroCmd;
@@ -37,8 +36,6 @@ import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.model.ShortCuts;
-import com.l2jserver.gameserver.model.effects.EffectTemplate;
-import com.l2jserver.gameserver.model.skills.L2Skill;
 import com.l2jserver.gameserver.network.serverpackets.ShortCutRegister;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
@@ -398,6 +395,54 @@ public class Helper implements IVoicedCommandHandler {
                 if(Count > 1) {
                     L2HelperNewbieSupportAdena = (long)Math.abs(Count);
                 }
+
+                // Buffer Recharge
+                Count = Double.parseDouble(Consumable.get("L2HelperBufferItemPriceCount"));
+                if(L2HelperPriceRate > 1.0) {
+                    Count = (Count * L2HelperPriceRate);
+                } else {
+                    Count = (Count / L2HelperPriceRate);
+                }
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperBufferItemPriceCount", Long.toString(Save));
+                }
+
+                // Buffer Buffs
+                Count = Double.parseDouble(Consumable.get("L2HelperBufferItemPriceCountBuffs"));
+                if(L2HelperPriceRate > 1.0) {
+                    Count = (Count * L2HelperPriceRate);
+                } else {
+                    Count = (Count / L2HelperPriceRate);
+                }
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperBufferItemPriceCountBuffs", Long.toString(Save));
+                }
+
+                // Buffer Song & Dance
+                Count = Double.parseDouble(Consumable.get("L2HelperBufferItemPriceCountDS"));
+                if(L2HelperPriceRate > 1.0) {
+                    Count = (Count * L2HelperPriceRate);
+                } else {
+                    Count = (Count / L2HelperPriceRate);
+                }
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperBufferItemPriceCountDS", Long.toString(Save));
+                }
+
+                // Buffer Special
+                Count = Double.parseDouble(Consumable.get("L2HelperBufferItemPriceCountSpecial"));
+                if(L2HelperPriceRate > 1.0) {
+                    Count = (Count * L2HelperPriceRate);
+                } else {
+                    Count = (Count / L2HelperPriceRate);
+                }
+                if(Count > 1) {
+                    Save = (long)Math.abs(Count);
+                    Consumable.put("L2HelperBufferItemPriceCountSpecial", Long.toString(Save));
+                }
             }
         }
     }
@@ -592,13 +637,23 @@ public class Helper implements IVoicedCommandHandler {
                 this.html += "<td align=center><button action=\"bypass -h voice .helper view info\" value=\"Information\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
                 this.html += "</tr>";
             this.html += "</table>";
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer\" value=\"Buffer\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view recharge\" value=\"Recharge\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+            if(L2HelperBuffer == true) {
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    if(L2HelperBufferBuffs == true || L2HelperBufferDS == true || L2HelperBufferSpecial == true) {
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer\" value=\"Buffer\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else {
+                        this.html += "<td></td>";
+                    }
+                    if(L2HelperBufferRecharge == true) {
+                        this.html += "<td align=center><button action=\"bypass -h voice .helper view recharge\" value=\"Recharge\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    } else {
+                        this.html += "<td></td>";
+                    }
+                    this.html += "</tr>";
+                this.html += "</table>";
+            }
             this.html += "<img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>For Premium User";
             if(this.activeChar.getSponsor() == 0) {
                 this.html += " : You not Premium user.";
@@ -715,47 +770,50 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void getBuffer()
     {
-        this.html = "<html><body><title>Lineage II Helper</title>";
-        this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+        if(L2HelperBuffer == true)
+        {
+            this.html = "<html><body><title>Lineage II Helper</title>";
+            this.html += "<table border=0 cellpadding=0 cellspacing=0 width=292 height=358 background=\"L2UI_CH3.refinewnd_back_Pattern\"><tr><td valign=\"top\" align=\"center\">";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
 
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h1\" value=\"Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
 
-            this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
-                /*this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c1\" value=\"Fighter\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c2\" value=\"Mages\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr><tr>";*/
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+                this.html += "<br><table border=0 cellpadding=0 cellspacing=0>";
+                    /*this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c1\" value=\"Fighter\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer c2\" value=\"Mages\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr><tr>";*/
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h2\" value=\"Songs\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h3\" value=\"Dances\" width=130 height=28 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
 
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer h4\" value=\"Special\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
 
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper view buffer r1\" value=\"Remove All Buffs\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
 
-            this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
-            this.html += "<table border=0 cellpadding=0 cellspacing=0>";
-                this.html += "<tr>";
-                this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
-                this.html += "</tr>";
-            this.html += "</table>";
-        this.html += "</td></tr></table>";
-        this.html += "</body></html>";
+                this.html += "<br><img src=\"L2UI_CH3.herotower_deco\" width=256 height=32><br>";
+                this.html += "<table border=0 cellpadding=0 cellspacing=0>";
+                    this.html += "<tr>";
+                    this.html += "<td align=center><button action=\"bypass -h voice .helper\" value=\"Back\" width=240 height=32 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td>";
+                    this.html += "</tr>";
+                this.html += "</table>";
+            this.html += "</td></tr></table>";
+            this.html += "</body></html>";
+        }
     }
     private void getBufferBuffs()
     {
@@ -1229,18 +1287,21 @@ public class Helper implements IVoicedCommandHandler {
      */
     private void Buff()
     {
-        if(this.param != null)
+        if(L2HelperBuffer == true)
         {
-            String[] prm = this.param.split(" ", 4);
-            for (int i = 0; i < prm.length; i++)
+            if(this.param != null)
             {
-                if(i == 2)
+                String[] prm = this.param.split(" ", 4);
+                for (int i = 0; i < prm.length; i++)
                 {
-                    this.Buff(prm[i], null);
-                }
-                if(i == 3)
-                {
-                    this.Buff(prm[2], prm[i]);
+                    if(i == 2)
+                    {
+                        this.Buff(prm[i], null);
+                    }
+                    if(i == 3)
+                    {
+                        this.Buff(prm[2], prm[i]);
+                    }
                 }
             }
         }
@@ -1252,27 +1313,42 @@ public class Helper implements IVoicedCommandHandler {
             switch(ID)
             {
                 case "h1": // HTML Buffs
-                    this.BuffGet(1, Skill);
-                    this.getBufferBuffs();
+                    if(L2HelperBufferBuffs == true)
+                    {
+                        this.BuffGet(1, Skill);
+                        this.getBufferBuffs();
+                    }
                     break;
 
                 case "h2": // HTML Songs
-                    this.BuffGet(2, Skill);
-                    this.getBufferSongs();
+                    if(L2HelperBufferDS == true)
+                    {
+                        this.BuffGet(2, Skill);
+                        this.getBufferSongs();
+                    }
                     break;
 
                 case "h3": // HTML Dances
-                    this.BuffGet(3, Skill);
-                    this.getBufferDances();
+                    if(L2HelperBufferDS == true)
+                    {
+                        this.BuffGet(3, Skill);
+                        this.getBufferDances();
+                    }
                     break;
 
                 case "h4": // HTML Special
-                    this.BuffGet(4, Skill);
-                    this.getBufferSpecial();
+                    if(L2HelperBufferSpecial == true)
+                    {
+                        this.BuffGet(4, Skill);
+                        this.getBufferSpecial();
+                    }
                     break;
 
                 case "r1":
-                    this.activeChar.stopAllEffects();
+                    if(L2HelperBufferRecharge == true)
+                    {
+                        this.activeChar.stopAllEffects();
+                    }
                     break;
             }
         }
@@ -1280,34 +1356,58 @@ public class Helper implements IVoicedCommandHandler {
     }
     private void BuffGet(Integer Type, String Skill)
     {
-        if(Skill != null)
+        try
         {
-            Integer id = Integer.parseInt(Skill);
-            String[] skill = null;
-
-            switch(Type)
+            if(Skill != null)
             {
-                case 1: // Get Buff
-                    skill = SkillBuffs.get(id);
-                    this.getBufferBuffs();
-                    break;
-                case 2: // Get Songs
-                    skill = SkillSongs.get(id);
-                    this.getBufferSongs();
-                    break;
-                case 3: // Get Dances
-                    skill = SkillDances.get(id);
-                    this.getBufferDances();
-                    break;
-                case 4: // Get Special
-                    skill = SkillSpecial.get(id);
-                    this.getBufferSpecial();
-                    break;
-            }
+                Integer id = Integer.parseInt(Skill);
+                String[] skill = null;
+                Integer item = null;
+                Long count = null;
 
-            if(skill != null) {
-                SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar, this.activeChar);
+                switch(Type)
+                {
+                    case 1: // Get Buff
+                        skill = SkillBuffs.get(id);
+                        item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdBuffs"));
+                        count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountBuffs"));
+                        this.getBufferBuffs();
+                        break;
+                    case 2: // Get Songs
+                        skill = SkillSongs.get(id);
+                        item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdDS"));
+                        count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountDS"));
+                        this.getBufferSongs();
+                        break;
+                    case 3: // Get Dances
+                        skill = SkillDances.get(id);
+                        item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdDS"));
+                        count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountDS"));
+                        this.getBufferDances();
+                        break;
+                    case 4: // Get Special
+                        skill = SkillSpecial.get(id);
+                        item = Integer.parseInt(Consumable.get("L2HelperBufferItemsByIdSpecial"));
+                        count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCountSpecial"));
+                        this.getBufferSpecial();
+                        break;
+                }
+
+                if(skill != null && item != null && count != null) {
+                    if(this.activeChar.destroyItemByItemId("Item", item, count, this.activeChar, true))
+                    {
+                        SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar, this.activeChar);
+                    }
+                    else
+                    {
+                        this.activeChar.sendMessage("Not have require item or count.");
+                    }
+                }
             }
+        }
+        catch (Exception e)
+        {
+            _log.log(Level.WARNING, "", e);
         }
 
     }
@@ -1315,18 +1415,24 @@ public class Helper implements IVoicedCommandHandler {
     {
         try
         {
-            if(this.activeChar.destroyItemByItemId("Adena", 57, 10000, this.activeChar, true))
+            if(L2HelperBufferRecharge == true)
             {
-                this.activeChar.setCurrentHpMp(this.activeChar.getMaxHp(), this.activeChar.getMaxMp());
-                this.activeChar.setCurrentCp(this.activeChar.getMaxCp());
-                this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
-                this.activeChar.sendPacket(new UserInfo(this.activeChar));
-                this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
-                this.activeChar.sendMessage("Set max HP MP CP");
-            }
-            else
-            {
-                this.activeChar.sendMessage("Require adena.");
+                Integer item = Integer.parseInt(Consumable.get("L2HelperBufferItemsById"));
+                Long count = Long.parseLong(Consumable.get("L2HelperBufferItemPriceCount"));
+
+                if(this.activeChar.destroyItemByItemId("Item", item, count, this.activeChar, true))
+                {
+                    this.activeChar.setCurrentHpMp(this.activeChar.getMaxHp(), this.activeChar.getMaxMp());
+                    this.activeChar.setCurrentCp(this.activeChar.getMaxCp());
+                    this.activeChar.broadcastPacket(new CharInfo(this.activeChar));
+                    this.activeChar.sendPacket(new UserInfo(this.activeChar));
+                    this.activeChar.broadcastPacket(new ExBrExtraUserInfo(this.activeChar));
+                    this.activeChar.sendMessage("Set max HP MP CP");
+                }
+                else
+                {
+                    this.activeChar.sendMessage("Not have require item or count.");
+                }
             }
         }
         catch (Exception e)
