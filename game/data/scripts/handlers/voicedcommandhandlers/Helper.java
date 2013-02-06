@@ -1,7 +1,7 @@
 package handlers.voicedcommandhandlers;
 /*
  * L2j Helper HighFive
- * Copyright (C) 2013 Milan Jankovec http://l2..perfect.sk
+ * Copyright (C) 2013 Milan Jankovec http://l2.perfect.sk
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
