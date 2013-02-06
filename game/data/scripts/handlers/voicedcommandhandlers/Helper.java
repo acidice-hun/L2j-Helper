@@ -37,6 +37,8 @@ import com.l2jserver.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import com.l2jserver.gameserver.network.serverpackets.ExVoteSystemInfo;
 import com.l2jserver.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2jserver.gameserver.model.ShortCuts;
+import com.l2jserver.gameserver.model.effects.EffectTemplate;
+import com.l2jserver.gameserver.model.skills.L2Skill;
 import com.l2jserver.gameserver.network.serverpackets.ShortCutRegister;
 import com.l2jserver.gameserver.network.serverpackets.UserInfo;
 import com.l2jserver.util.L2Properties;
@@ -68,12 +70,12 @@ public class Helper implements IVoicedCommandHandler {
     // Cache
     private static boolean Properties = false;
 
-    private static HashMap<String, String>    Html         = new HashMap<String, String>();
-    private static HashMap<String, String>    Consumable   = new HashMap<String, String>();
-    private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<Integer, String[]>();
-    private static HashMap<Integer, String[]> SkillSongs   = new HashMap<Integer, String[]>();
-    private static HashMap<Integer, String[]> SkillDances  = new HashMap<Integer, String[]>();
-    private static HashMap<Integer, String[]> SkillSpecial = new HashMap<Integer, String[]>();
+    private static HashMap<String, String>    Html         = new HashMap<>();
+    private static HashMap<String, String>    Consumable   = new HashMap<>();
+    private static HashMap<Integer, String[]> SkillBuffs   = new HashMap<>();
+    private static HashMap<Integer, String[]> SkillSongs   = new HashMap<>();
+    private static HashMap<Integer, String[]> SkillDances  = new HashMap<>();
+    private static HashMap<Integer, String[]> SkillSpecial = new HashMap<>();
 
     private static boolean L2Helper;
     private static boolean L2HelperIsCombat;
@@ -1281,31 +1283,30 @@ public class Helper implements IVoicedCommandHandler {
         if(Skill != null)
         {
             Integer id = Integer.parseInt(Skill);
-            String[] skill;
-            //SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
+            String[] skill = null;
 
             switch(Type)
             {
                 case 1: // Get Buff
                     skill = SkillBuffs.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferBuffs();
                     break;
                 case 2: // Get Songs
                     skill = SkillSongs.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferSongs();
                     break;
                 case 3: // Get Dances
                     skill = SkillDances.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferDances();
                     break;
                 case 4: // Get Special
                     skill = SkillSpecial.get(id);
-                    SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffectsSelf(this.activeChar);
                     this.getBufferSpecial();
                     break;
+            }
+
+            if(skill != null) {
+                SkillTable.getInstance().getInfo(id,Integer.parseInt(skill[0])).getEffects(this.activeChar, this.activeChar);
             }
         }
 
